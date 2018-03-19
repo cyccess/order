@@ -13,9 +13,6 @@ namespace Cyc.Order.Web.Controllers
     {
         readonly DbContext context;
          
-
-
-
         public HomeController(DbContext context)
         {
             this.context = context;
