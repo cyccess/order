@@ -11,20 +11,21 @@ namespace Cyc.Order.Web.Controllers
 {
     public class HomeController : Controller
     {
-        readonly DbContext context;
+        //readonly DbContext context;
          
-        public HomeController(DbContext context)
-        {
-            this.context = context;
-        }
+        //public HomeController(DbContext context)
+        //{
+        //    this.context = context;
+        //}
 
         public IActionResult Index()
         {
-            var a = context.Goods.ToList();
+          
+            //var a = context.Goods.ToList();
             return View();
         }
 
-        public IActionResult About()
+        public IActionResult Login()
         {
             ViewData["Message"] = "Your application description page.";
 
