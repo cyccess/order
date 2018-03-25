@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `order` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `order`;
 -- MySQL dump 10.13  Distrib 5.7.17, for Win64 (x86_64)
 --
 -- Host: localhost    Database: order
@@ -27,13 +25,16 @@ DROP TABLE IF EXISTS `order_goods`;
 CREATE TABLE `order_goods` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `brand_id` int(11) DEFAULT NULL,
+  `goods_img` varchar(200) DEFAULT NULL,
   `goods_code` varchar(45) DEFAULT NULL,
   `goods_name` varchar(200) DEFAULT NULL,
   `goods_spec` varchar(45) DEFAULT NULL,
   `goods_unit` varchar(45) DEFAULT NULL,
+  `status` int(11) DEFAULT NULL COMMENT '商品状态',
   `add_time` date DEFAULT NULL,
+  `last_update_time` date DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='商品表';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='商品表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -42,7 +43,7 @@ CREATE TABLE `order_goods` (
 
 LOCK TABLES `order_goods` WRITE;
 /*!40000 ALTER TABLE `order_goods` DISABLE KEYS */;
-INSERT INTO `order_goods` VALUES (1,1,'6934652192754','奶牛梦工厂原味','150g','杯','2018-03-18');
+INSERT INTO `order_goods` VALUES (1,3,'/img/pic.jpg','6934652192754','奶牛梦工厂原味','150g','杯',1,'0001-01-01',NULL);
 /*!40000 ALTER TABLE `order_goods` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -127,9 +128,9 @@ DROP TABLE IF EXISTS `order_record`;
 CREATE TABLE `order_record` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `amount` int(11) DEFAULT NULL COMMENT '商品数量',
-  `adddate` date DEFAULT NULL,
+  `add_date` date DEFAULT NULL,
   `status` int(11) DEFAULT NULL COMMENT '订单状态',
-  `enddate` varchar(45) DEFAULT NULL,
+  `end_date` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单记录表';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -152,6 +153,11 @@ DROP TABLE IF EXISTS `order_record_detail`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `order_record_detail` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_id` int(11) DEFAULT NULL,
+  `goods_id` varchar(45) DEFAULT NULL,
+  `goods_name` varchar(45) DEFAULT NULL,
+  `goods_img` varchar(45) DEFAULT NULL,
+  `goods_price` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单记录详情表';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -201,7 +207,7 @@ CREATE TABLE `order_shop` (
   `name` varchar(100) DEFAULT NULL COMMENT '便利店名称',
   `phone` varchar(20) DEFAULT NULL,
   `address` varchar(100) DEFAULT NULL COMMENT '便利店地址',
-  `regin_id` int(11) DEFAULT NULL COMMENT '区域ID',
+  `region_id` int(11) DEFAULT NULL COMMENT '区域ID',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='便利店';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -232,4 +238,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-03-20 22:37:30
+-- Dump completed on 2018-03-25 22:16:16

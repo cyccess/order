@@ -1,0 +1,68 @@
+﻿@model Cyc.Order.Data.DataModel.Goods
+
+@{
+    ViewData["Title"] = "添加商品";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="BrandId" class="control-label">所属品牌</label>
+                <select class="form-control" asp-for="BrandId">
+                    <option value="">请选择</option>
+                @foreach (var item in (List<Cyc.Order.Data.DataModel.Brand>)ViewData["Brands"])
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
+                </select>
+                <span asp-validation-for="BrandId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GoodsImg" class="control-label">商品图片</label>
+                <input asp-for="GoodsImg" class="form-control" />
+                <span asp-validation-for="GoodsImg" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GoodsCode" class="control-label">商品条码</label>
+                <input asp-for="GoodsCode" class="form-control" />
+                <span asp-validation-for="GoodsCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GoodsName" class="control-label">商品名称</label>
+                <input asp-for="GoodsName" class="form-control" />
+                <span asp-validation-for="GoodsName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GoodsSepc" class="control-label">商品规格</label>
+                <input asp-for="GoodsSepc" class="form-control" />
+                <span asp-validation-for="GoodsSepc" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="GoodsUnit" class="control-label">商品单位</label>
+                <select asp-for="GoodsUnit" class="form-control">
+                    <option value="">请选择</option>
+                    <option value="瓶">瓶</option>
+                    <option value="杯">杯</option>
+                    <option value="盒">盒</option>
+                </select>
+                <span asp-validation-for="GoodsUnit" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="确定保存" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">返回列表</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

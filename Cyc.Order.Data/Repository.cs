@@ -8,66 +8,65 @@ namespace Cyc.Order.Data
 {
     public class Repository
     {
-        private readonly DbContext db;
+        private readonly OrderDbContext context;
 
         /// <summary>
         /// 每次new会重新创建一个 DBContext 实例
         /// </summary>
         public Repository()
         {
-            this.db = new DbContext();
+            //this.context = new OrderDbContext();
         }
 
-
-        public DbContext DbContext
+        public OrderDbContext DbContext
         {
             get
             {
-                return db;
+                return context;
             }
         }
 
         public T Find<T>(int id) where T : class, new()
         {
-            return db.Set<T>().Find(id);
+            return context.Set<T>().Find(id);
         }
 
         public T FirstOrDefault<T>(Expression<Func<T, bool>> func) where T : class, new()
         {
-            return db.Set<T>().FirstOrDefault(func);
+            return context.Set<T>().FirstOrDefault(func);
         }
 
         public T SingleOrDefault<T>(Expression<Func<T, bool>> func) where T : class, new()
         {
-            return db.Set<T>().SingleOrDefault(func);
+            return context.Set<T>().SingleOrDefault(func);
         }
 
         public IQueryable<T> Where<T>(Expression<Func<T, bool>> func) where T : class, new()
         {
-            return db.Set<T>().Where(func);
+            return context.Set<T>().Where(func);
         }
 
         public void Add<T>(T model) where T : class, new()
         {
-            db.Set<T>().Add(model);
+            context.Set<T>().Add(model);
         }
 
         public void Update<T>(T model) where T : class, new()
         {
-            db.Update<T>(model);
+            context.Update<T>(model);
         }
 
         public void Delete<T>(T model) where T : class, new()
         {
-            db.Set<T>().Remove(model);
+            context.Set<T>().Remove(model);
         }
 
         public void Delete<T>(Expression<Func<T, bool>> func) where T : class, new()
         {
-            var list = db.Set<T>().Where(func).ToList();
+            var list = context.Set<T>().Where(func).ToList();
             foreach (var item in list)
             {
-                db.Set<T>().Remove(item);
+                context.Set<T>().Remove(item);
             }
         }
 
@@ -84,12 +83,12 @@ namespace Cyc.Order.Data
 
         public int SaveChanges()
         {
-            return db.SaveChanges();
+            return context.SaveChanges();
         }
 
         public IQueryable<T> Entities<T>() where T : class, new()
         {
-            return db.Set<T>().AsQueryable();
+            return context.Set<T>().AsQueryable();
         }
 
     }

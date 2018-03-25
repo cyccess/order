@@ -1,0 +1,64 @@
+﻿@model Cyc.Order.Data.DataModel.Goods
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Goods</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.BrandId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.BrandId)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.GoodsImg)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.GoodsImg)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.GoodsCode)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.GoodsCode)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.GoodsName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.GoodsName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.GoodsSepc)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.GoodsSepc)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.GoodsUnit)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.GoodsUnit)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.AddTime)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.AddTime)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Delete" class="btn btn-default" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

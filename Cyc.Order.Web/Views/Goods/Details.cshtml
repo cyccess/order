@@ -1,0 +1,57 @@
+﻿@model Cyc.Order.Data.DataModel.Goods
+
+@{
+    ViewData["Title"] = Model.GoodsName;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.BrandId)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Brand.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.GoodsImg)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.GoodsImg)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.GoodsCode)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.GoodsCode)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.GoodsName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.GoodsName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.GoodsSepc)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.GoodsSepc)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.GoodsUnit)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.GoodsUnit)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.AddTime)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.AddTime)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">修改</a> |
+    <a asp-action="Index">返回列表</a>
+</div>

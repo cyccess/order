@@ -1,0 +1,70 @@
+﻿@model IEnumerable<Cyc.Order.Data.DataModel.Goods>
+
+@{
+    ViewData["Title"] = "商品管理";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<p>
+    <a asp-action="Create" class="btn btn-success">新加商品</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                品牌
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GoodsImg)
+            </th>
+            <th>
+                商品条码
+            </th>
+            <th>
+                商品名称
+            </th>
+            <th>
+                规格
+            </th>
+            <th>
+                单位
+            </th>
+            <th>
+                添加时间
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Brand.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GoodsImg)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GoodsCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GoodsName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GoodsSepc)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GoodsUnit)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AddTime)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">修改</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">详情</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">删除</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
