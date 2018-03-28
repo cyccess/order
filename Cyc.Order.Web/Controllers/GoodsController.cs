@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Cyc.Order.Data;
+using Cyc.Order.Data.DataModel;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Cyc.Order.Data;
-using Cyc.Order.Data.DataModel;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Cyc.Order.Web.Controllers
 {
@@ -47,8 +47,7 @@ namespace Cyc.Order.Web.Controllers
         // GET: Goods/Create
         public async Task<IActionResult> Create()
         {
-            var brands = await _context.Brands.ToListAsync();
-            ViewData["Brands"] = brands;
+            ViewData["Brands"] = await _context.Brands.ToListAsync();
             return View();
         }
 
@@ -76,14 +75,13 @@ namespace Cyc.Order.Web.Controllers
             }
 
             var goods = await _context.Goods.Include("Brand").SingleOrDefaultAsync(m => m.Id == id);
-
-            var brands = await _context.Brands.ToListAsync();
             if (goods == null)
             {
+                var brands = await _context.Brands.ToListAsync();
+                ViewData["Brands"] = brands;
                 return NotFound();
             }
-           
-            ViewData["Brands"] = brands;
+
             return View(goods);
         }
 
@@ -159,6 +157,6 @@ namespace Cyc.Order.Web.Controllers
         {
             return await _context.Brands.ToListAsync();
         }
-        
+
     }
 }

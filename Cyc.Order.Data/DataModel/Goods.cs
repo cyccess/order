@@ -13,6 +13,7 @@ namespace Cyc.Order.Data.DataModel
         [Column("id")]
         public int Id { get; set; }
 
+        [Required]
         [Column("brand_id")]
         public int BrandId { get; set; }
 
@@ -22,6 +23,7 @@ namespace Cyc.Order.Data.DataModel
         [Column("goods_code")]
         public string GoodsCode { get; set; }
 
+        [Required]
         [Column("goods_name")]
         public string GoodsName { get; set; }
 

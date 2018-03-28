@@ -1,16 +1,13 @@
-﻿using System;
+﻿using Cyc.Order.Web.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Cyc.Order.Web.Models;
-using Cyc.Order.Data;
-using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
 
 namespace Cyc.Order.Web.Controllers
 {
@@ -18,13 +15,12 @@ namespace Cyc.Order.Web.Controllers
     {
         public IActionResult Index()
         {
-
             return View();
         }
 
         [AllowAnonymous]
         [HttpGet("login")]
-        public async Task<IActionResult> Login(string returnUrl = null)
+        public IActionResult Login(string returnUrl = null)
         {
             TempData["returnUrl"] = returnUrl;
             return View();

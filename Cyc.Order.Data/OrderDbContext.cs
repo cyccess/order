@@ -18,8 +18,6 @@ namespace Cyc.Order.Data
         public DbSet<Brand> Brands { get; set; }
 
 
-
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Goods>().ToTable("order_goods");
