@@ -19,11 +19,17 @@ namespace Cyc.Order.Data.DataModel
         [Column("phone")]
         public string Phone { get; set; }
 
+        [Column("password")]
+        public string Password { get; set; }
+
         [Column("address")]
         public string Address { get; set; }
 
         [Column("region_id")]
         public int RegionId { get; set; }
+
+        [Column("add_date")]
+        public int AddDate { get; set; }
 
     }
 }

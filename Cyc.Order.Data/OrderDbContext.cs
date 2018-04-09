@@ -16,11 +16,16 @@ namespace Cyc.Order.Data
 
         public DbSet<Goods> Goods { get; set; }
         public DbSet<Brand> Brands { get; set; }
+        public DbSet<Shop> Shops { get; set; }
+        public DbSet<OrderRecord> OrderRecords { get; set; }
+        public DbSet<OrderRecordDetail> OrderRecordDetails { get; set; }
+        public DbSet<Cart> Carts { get; set; }
+        public DbSet<GoodsPrice> GoodsPrices { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Goods>().ToTable("order_goods");
+            //modelBuilder.Entity<Goods>().ToTable("order_goods");
         }
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

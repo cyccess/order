@@ -59,3 +59,85 @@
 .table-upgrade td:nth-child(3){
     text-align: center;
 }
+
+
+.fileinput-button {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.fileinput-button input {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    opacity: 0;
+    -ms-filter: 'alpha(opacity=0)';
+    font-size: 200px !important;
+    direction: ltr;
+    cursor: pointer;
+}
+
+/* Fixes for IE < 8 */
+@media screen\9 {
+    .fileinput-button input {
+        filter: alpha(opacity=0);
+        font-size: 100%;
+        height: 100%;
+    }
+}
+
+
+.img-upload-con, .img-detail-con {
+    display: inline-block;
+}
+
+.img-detail-con{width:135px;height:135px;border:1px solid #ddd;}
+.img-detail-con img{vertical-align:bottom;}
+
+.order-table .status, .order-table .operate {
+    line-height: 22px;
+    text-align: center;
+}
+
+.order-table .operate .btn{
+    margin:3px 0;
+}
+
+.order-table .order-cancel {
+    color: #333;
+}
+
+.text-somber {
+    color: #333;
+}
+.order-state{
+    text-align:center;
+    border-right:1px solid #ddd;
+    min-height:208px;
+}
+.state-top{
+    line-height:22px;
+    margin-bottom:20px;
+}
+.state-txt span {
+    font-size: 24px;
+    font-weight: 700;
+}
+.state-btn{
+    margin-top:20px;
+    margin-bottom:30px;
+}
+
+.order-info-item{
+    line-height:24px;
+}
+
+.goods-total{
+    text-align:right;
+}
+.goods-total .count {
+    font-size: 18px;
+    font-weight: 700;
+}

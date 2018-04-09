@@ -1,11 +1,16 @@
 ﻿using Cyc.Order.Data;
 using Cyc.Order.Data.DataModel;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
+using System.Net.Mime;
 using System.Threading.Tasks;
 
 namespace Cyc.Order.Web.Controllers
@@ -15,15 +20,19 @@ namespace Cyc.Order.Web.Controllers
     {
         private readonly OrderDbContext _context;
 
-        public GoodsController(OrderDbContext context)
+        private IHostingEnvironment hostingEnv;
+
+        public GoodsController(OrderDbContext context, IHostingEnvironment env)
         {
             _context = context;
+            this.hostingEnv = env;
         }
 
         // GET: Goods
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Goods.Include("Brand").ToListAsync());
+            var list = await _context.Goods.Include("Brand").Where(g => g.IsDelete).ToListAsync();
+            return View(list);
         }
 
         // GET: Goods/Details/5
@@ -58,6 +67,7 @@ namespace Cyc.Order.Web.Controllers
             if (ModelState.IsValid)
             {
                 goods.Status = 1;
+                goods.IsDelete = true;
                 goods.AddTime = DateTime.Now;
                 _context.Add(goods);
                 await _context.SaveChangesAsync();
@@ -77,10 +87,9 @@ namespace Cyc.Order.Web.Controllers
             var goods = await _context.Goods.Include("Brand").SingleOrDefaultAsync(m => m.Id == id);
             if (goods == null)
             {
-                var brands = await _context.Brands.ToListAsync();
-                ViewData["Brands"] = brands;
                 return NotFound();
             }
+            ViewData["Brands"] = await _context.Brands.ToListAsync();
 
             return View(goods);
         }
@@ -99,6 +108,7 @@ namespace Cyc.Order.Web.Controllers
                 try
                 {
                     goods.LastUpdateTime = DateTime.Now;
+                    goods.IsDelete = true;
                     _context.Update(goods);
                     await _context.SaveChangesAsync();
                 }
@@ -118,33 +128,41 @@ namespace Cyc.Order.Web.Controllers
             return View(goods);
         }
 
-        // GET: Goods/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var goods = await _context.Goods
-                .SingleOrDefaultAsync(m => m.Id == id);
-            if (goods == null)
-            {
-                return NotFound();
-            }
-
-            return View(goods);
-        }
 
         // POST: Goods/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var goods = await _context.Goods.SingleOrDefaultAsync(m => m.Id == id);
-            _context.Goods.Remove(goods);
+            goods.IsDelete = true;
+            //_context.Goods.Remove(goods);
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Json(new { message = "你的商品已删除." });
+        }
+
+        [HttpPost]
+        [Route("goods/uploadimage")]
+        public IActionResult UploadImage()
+        {
+            var file = Request.Form.Files["image"];
+            var filename = ContentDispositionHeaderValue
+                         .Parse(file.ContentDisposition)
+                         .FileName
+                         .Trim('"');
+
+            var ext = Path.GetExtension(filename);
+            var newName = Path.Combine("images", DateTime.Now.Ticks + ".jpg");
+            var filePath = hostingEnv.WebRootPath + $@"\{newName}";
+
+            using (FileStream fs = System.IO.File.Create(filePath))
+            {
+                file.CopyTo(fs);
+                fs.Flush();
+            }
+
+            var host = HttpContext.Request.Host.Value;
+            return Json(new { imgPath = $"http://{host}/{newName.Replace(@"\", @"/")}" });
         }
 
         private bool GoodsExists(int id)

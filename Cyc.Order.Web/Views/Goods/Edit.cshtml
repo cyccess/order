@@ -1,28 +1,42 @@
 ﻿@model Cyc.Order.Data.DataModel.Goods
-
 @{
-    ViewData["Title"] = "修改商品 - "+Model.GoodsName;
+    ViewData["Title"] = "修改商品 - " + Model.GoodsName;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit" class="">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="AddTime" />
             <div class="form-group">
                 <label asp-for="BrandId" class="control-label">所属品牌</label>
                 <select class="form-control" asp-for="BrandId">
-                    @foreach (var item in (List<Cyc.Order.Data.DataModel.Brand>)ViewData["Brands"])
-                    {
-                       <option value="@item.Id">@item.Name</option>
-                    }
+                @foreach (var item in (List<Brand>)ViewData["Brands"])
+                {
+                    <option value="@item.Id">@item.Name</option>
+                }
                 </select>
                 <span asp-validation-for="BrandId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="GoodsImg" class="control-label">商品图片</label>
-                <input asp-for="GoodsImg" class="form-control" />
+                <div class="img-wrapper">
+                    <div class="img-detail-con">
+                        <img src="@Model.GoodsImg" class="goodsImage" alt="" width="135" height="135" />
+                    </div>
+
+                    <div class="img-upload-con">
+                        <div class="fileinput-button">
+                            <button class="btn btn-warning">
+                                <i class="fa fa-cloud-upload"></i>
+                                <span>上传商品图片</span>
+                            </button>
+                            <input id="fileupload" type="file" name="image" data-url="/goods/uploadimage" />
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" asp-for="GoodsImg" />
                 <span asp-validation-for="GoodsImg" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -46,7 +60,9 @@
                     <option value="">请选择</option>
                     <option value="瓶">瓶</option>
                     <option value="杯">杯</option>
+                    <option value="袋">袋</option>
                     <option value="盒">盒</option>
+                    <option value="箱">箱</option>
                 </select>
                 <span asp-validation-for="GoodsUnit" class="text-danger"></span>
             </div>
@@ -56,11 +72,37 @@
         </form>
     </div>
 </div>
-
 <div>
     <a asp-action="Index">返回列表</a>
 </div>
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/assets/js/vendor/jquery.ui.widget.js"></script>
+    <script src="~/assets/js/jquery.iframe-transport.js"></script>
+    <script src="~/assets/js/jquery.fileupload.js"></script>
+    <script>
+        $(function () {
+            $('#fileupload').fileupload({
+                dataType: 'json',
+                done: function (e, data) {
+                    $("#GoodsImg").val(data.result.imgPath);
+                    $(".goodsImage").attr("src", data.result.imgPath);
+                    $(".fileinput-button .btn span").text("重新上传图片");
+                    $(".img-detail-con").show();
+
+                    $.notify({
+                        message: "商品图片上传成功！",
+                        icon: 'pe-7s-check',
+                    }, {
+                            type: "success",
+                            placement: {
+                                from: "top",
+                                align: "center"
+                            },
+                            delay: 3000
+                        });
+                }
+            });
+        });
+    </script>
 }

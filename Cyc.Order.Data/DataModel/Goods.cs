@@ -42,6 +42,9 @@ namespace Cyc.Order.Data.DataModel
         [Column("status")]
         public int Status { get; set; }
 
+        [Column("is_delete")]
+        public bool IsDelete { get; set; }
+
         public virtual Brand Brand { get; set; }
     }
 }

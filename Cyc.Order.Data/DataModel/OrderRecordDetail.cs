@@ -20,13 +20,22 @@ namespace Cyc.Order.Data.DataModel
         public int GoodsId { get; set; }
 
         [Column("goods_name")]
-        public string GoodsName { get; set; }
+        public string Name { get; set; }
+
+        [Column("goods_code")]
+        public int Code { get; set; }
 
         [Column("goods_img")]
-        public string GoodsImg { get; set; }
+        public string Img { get; set; }
 
         [Column("goods_price")]
-        public decimal GoodsPrice { get; set; }
+        public decimal Price { get; set; }
+
+        [Column("goods_num")]
+        public int Num { get; set; }
+
+        [Column("add_date")]
+        public DateTime AddDate { get; set; }
 
     }
 }

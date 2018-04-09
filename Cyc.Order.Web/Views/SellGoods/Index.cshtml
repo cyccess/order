@@ -1,0 +1,76 @@
+﻿@model IEnumerable<Cyc.Order.Data.DataModel.Goods>
+@{
+    ViewData["Title"] = "商品订购";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                商品名称
+            </th>
+            <th>
+                商品条码
+            </th>
+            <th>
+                品牌
+            </th>
+            <th>
+                规格
+            </th>
+            <th>
+                单位
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.GoodsName)</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GoodsCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Brand.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GoodsSepc)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GoodsUnit)
+                </td>
+                <td>
+                    <a class="btn btn-primary btn-xs add-cart" data-id="@item.Id">加入购物车</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+@section Scripts{
+    <script>
+        $(function () {
+
+            $(".add-cart").on("click", function () {
+                var id = $(this).data("id");
+                $.post("/sellgoods/AddCart", { goodsId:id }, function (data) {
+                    $.notify({
+                        message: data.message,
+                        icon: 'pe-7s-check',
+                    }, {
+                            type: "success",
+                            placement: {
+                                from: "top",
+                                align: "center"
+                            },
+                            delay: 2000
+                        });
+                });
+            });
+        })
+    </script>
+}

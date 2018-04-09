@@ -6,7 +6,6 @@ using System.Text;
 
 namespace Cyc.Order.Data.DataModel
 {
-
     [Table("order_record")]
     public class OrderRecord
     {
@@ -14,17 +13,37 @@ namespace Cyc.Order.Data.DataModel
         [Column("id")]
         public int Id { get; set; }
 
-        [Column("amount")]
-        public decimal Amount { get; set; }
+        [Column("shop_id")]
+        public int ShopId { get; set; }
 
-        [Column("add_date")]
-        public DateTime AddDate { get; set; }
+        [Column("num")]
+        public int Num { get; set; }
+
+        [Column("price")]
+        public decimal Price { get; set; }
+
+        [Column("total_amount")]
+        public decimal TotalAmount { get; set; }
+
+        [Column("order_date")]
+        public DateTime OrderDate { get; set; }
 
         [Column("status")]
         public int Status { get; set; }
 
         [Column("end_date")]
         public DateTime EndDate { get; set; }
-    }
 
+        [Column("region_id")]
+        public int RegionId { get; set; }
+
+        [Column("mobile_phone")]
+        public string MobilePhone { get; set; }
+
+        [Column("consignee")]
+        public string Consignee { get; set; }
+
+        [Column("address")]
+        public string Address { get; set; }
+    }
 }

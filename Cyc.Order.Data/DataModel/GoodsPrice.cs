@@ -18,5 +18,8 @@ namespace Cyc.Order.Data.DataModel
 
         [Column("goods_price")]
         public decimal Price { get; set; }
+
+        [Column("shop_id")]
+        public decimal ShopId { get; set; }
     }
 }

@@ -1,0 +1,14 @@
+﻿@model OrderStatus
+
+@switch (Model)
+{
+    case OrderStatus.Undelivered:
+        <span class="text-warning">待发货</span>
+        break;
+    case OrderStatus.Delivered:
+        <span class="text-muted">已发货</span>
+        break;
+    case OrderStatus.Cancel:
+        <span class="text-muted">已取消</span>
+        break;
+}
