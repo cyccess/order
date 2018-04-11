@@ -257,3 +257,7 @@
    display:none;
    text-align:center;
 }
+
+@media (max-width: 991px) {
+    .cart-toolbar{width:100%;}
+}

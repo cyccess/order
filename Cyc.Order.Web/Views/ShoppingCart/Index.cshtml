@@ -3,121 +3,72 @@
     ViewData["Title"] = "我的购物车";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <div class="cart-content">
-    <table class="table">
-        <thead>
-            <tr>
-                <th><input type="checkbox" value="" />选择</th>
-                <th>
-                    商品
-                </th>
-                <th>
-                    单价
-                </th>
-                <th>
-                    数量
-                </th>
-                <th>
-                    小计
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody class="cart-tbody">
-            @foreach (var item in Model)
-            {
-                <tr class="product_@item.Id">
-                    <td>
-                        <input type="checkbox" value="" />
-                    </td>
-                    <td>
-                        <div class="c-name">
-                            <a asp-action="Details" asp-controller="SellGoods" asp-route-id="@item.GoodsId">@item.GoodsName</a>
-                        </div>
-
-                        <div class="c-props">规格:@Html.DisplayFor(modelItem => item.GoodsSepc)</div>
-                    </td>
-                    <td>
-                        ¥9.90
-                    </td>
-                    <td>
-                        <div class="c-quantity">
-                            <a class="minus" href="#"><i class="fa fa-minus-circle"></i></a>
-                            <input class="cart-goods-num" type="text" name="name" value="1" />
-                            <a class="plus" href="#"><i class="fa fa-plus-circle"></i></a>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="c-sum">
-                            <strong>¥9.90</strong>
-                        </div>
-                    </td>
-
-                    <td>
-                        <a id="remove_@item.Id" class="btn btn-default btn-xs cart-remove">删除</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-      
-    </table>
-
-    <div class="cart-empty" >购物车是空的~</div>
-
-    <div class="cart-toolbar fixed-bottom">
-        <div class="toolbar-wrap">
-            <div class="btn-area">
-                <input type="button" class="btn btn-danger" value="去结算" />
-            </div>
-
-            <div class="price-sum">
-                <span class="">总价：</span>
-                <span class="price"><em>¥279.00</em></span>
-            </div>
-
-            <div class="amount-sum">
-                已选择<em>1</em>件商品
-            </div>
-        </div>
-    </div>
+    @Html.Partial("_Cart", Model)
 </div>
 
 @section Scripts{
     <script>
         $(function () {
 
-            $(".plus").click(function () {
-                var $num = $(this).next(".cart-goods-num");
-                var num = parseInt($num.val());
-                $num.val(num + 1);
-            });
-    
-            $(".minus").click(function () {
+            $(".cart-content").on("click", ".plus", function () {
                 var $num = $(this).prev(".cart-goods-num");
                 var num = parseInt($num.val());
-                if (num > 1) {
-                    $num.val(num - 1);
-                }
+                $num.val(num + 1);
+                var id = $(this).data("id");
+                $.get("/shoppingcart/quantity", {id:id,type:'plus'}, function (data) {
+                    $(".cart-content").html(data);
+                });
             });
-      
-            $(".cart-goods-num").on('input propertychange', function () {
+
+            $(".cart-content").on("click", ".minus", function () {
+                var $num = $(this).next(".cart-goods-num");
+                var num = parseInt($num.val());
+                if (num === 1) {
+                    return false;
+                }
+                $num.val(num - 1);
+                var id = $(this).data("id");
+                $.get("/shoppingcart/quantity", { id: id, type: 'minus' }, function (data) {
+                    $(".cart-content").html(data);
+                });
+            });
+
+            $(".cart-content").on('input propertychange', '.cart-goods-num', function () {
                 var $that = $(this);
                 var val = $that.val();
                 if (isNaN(val)) {
                     $that.val(1);
+                    val = 1;
                 }
-            });
-
-            $(".cart-remove").on("click", function () {
-                var id = this.id;
-                var goodsId = id.substring(id.indexOf('_') + 1);
-
-                $(".product_" + goodsId).remove();
-
-                $.post("/sellgoods/RemoveCart", { goodsId: goodsId }, function (data) {
-                   
+                var id = $that.data("id");
+                $.get("/shoppingcart/quantity", { id: id, type: '', num: val }, function (data) {
+                    $(".cart-content").html(data);
                 });
+            });
+
+
+            $(".cart-content").on("click", ".cart-remove", function () {
+                var elementId = this.id;
+                var id = elementId.substring(elementId.indexOf('_') + 1);
+
+                swal({
+                    title: '删除商品？',
+                    text: '可在“商品选购”中继续加入该商品',
+                    type: 'info',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消'
+                }).then(function () {
+                    $.post("/shoppingcart/remove", { id: id }, function (data) {
+                        if (data.code === 100) {
+                            $(".product_" + id).remove();
+                        }
+                    });
+                }).catch(function () {
+
+                })
             });
         })
     </script>

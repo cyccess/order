@@ -19,10 +19,7 @@ namespace Cyc.Order.Web.Models
         public decimal Price { get; set; }
 
         public int Status { get; set; }
-
-        public DateTime CreateTime { get; set; }
-
-
+    
         public int BrandId { get; set; }
 
         public string GoodsImg { get; set; }
@@ -37,6 +34,4 @@ namespace Cyc.Order.Web.Models
 
         public string BrandName { get; set; }
     }
-
-    
 }

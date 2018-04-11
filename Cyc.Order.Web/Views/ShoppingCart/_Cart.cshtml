@@ -1,0 +1,79 @@
+﻿@model IEnumerable<ShoppingCartViewModel>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th><input type="checkbox" value="" />选择</th>
+            <th>
+                商品
+            </th>
+            <th>
+                单价
+            </th>
+            <th>
+                数量
+            </th>
+            <th>
+                小计
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody class="cart-tbody">
+        @foreach (var item in Model)
+        {
+            <tr class="product_@item.Id">
+                <td>
+                    <input type="checkbox" value="@item.Id" />
+                </td>
+                <td>
+                    <div class="c-name">
+                        <a asp-action="Details" asp-controller="SellGoods" asp-route-id="@item.GoodsId">@item.GoodsName</a>
+                    </div>
+
+                    <div class="c-props">规格:@Html.DisplayFor(modelItem => item.GoodsSepc)</div>
+                </td>
+                <td>
+                    ¥9.90
+                </td>
+                <td>
+                    <div class="c-quantity">
+                        <a class="minus" href="#" data-id="@item.Id"><i class="fa fa-minus-circle"></i></a>
+                        <input class="cart-goods-num" type="text" name="name" value="@item.Num" data-id="@item.Id"/>
+                        <a class="plus" href="#" data-id="@item.Id"><i class="fa fa-plus-circle"></i></a>
+                    </div>
+                </td>
+                <td>
+                    <div class="c-sum">
+                        <strong>¥9.90</strong>
+                    </div>
+                </td>
+
+                <td>
+                    <a id="remove_@item.Id" class="btn btn-default btn-xs cart-remove">删除</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>
+
+<div class="cart-empty">购物车是空的~</div>
+
+<div class="cart-toolbar fixed-bottom">
+    <div class="toolbar-wrap">
+        <div class="btn-area">
+            <input type="button" class="btn btn-danger" value="去结算" />
+        </div>
+
+        <div class="price-sum">
+            <span class="">总价：</span>
+            <span class="price"><em>¥@TempData["priceSum"]</em></span>
+        </div>
+
+        <div class="amount-sum">
+            已选择<em>@TempData["amountSum"]</em>件商品
+        </div>
+    </div>
+</div>
+
