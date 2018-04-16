@@ -14,12 +14,12 @@ namespace Cyc.Order.Data.DataModel
         public int Id { get; set; }
 
         [Column("goods_id")]
-        public string GoodsId { get; set; }
+        public int GoodsId { get; set; }
 
         [Column("goods_price")]
         public decimal Price { get; set; }
 
         [Column("shop_id")]
-        public decimal ShopId { get; set; }
+        public int? ShopId { get; set; }
     }
 }

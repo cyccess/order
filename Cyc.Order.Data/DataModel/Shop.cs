@@ -29,7 +29,7 @@ namespace Cyc.Order.Data.DataModel
         public int RegionId { get; set; }
 
         [Column("add_date")]
-        public int AddDate { get; set; }
+        public DateTime AddDate { get; set; }
 
     }
 }

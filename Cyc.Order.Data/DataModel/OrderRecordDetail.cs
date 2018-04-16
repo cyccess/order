@@ -23,7 +23,7 @@ namespace Cyc.Order.Data.DataModel
         public string Name { get; set; }
 
         [Column("goods_code")]
-        public int Code { get; set; }
+        public string Code { get; set; }
 
         [Column("goods_img")]
         public string Img { get; set; }

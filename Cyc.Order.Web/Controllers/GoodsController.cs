@@ -29,6 +29,7 @@ namespace Cyc.Order.Web.Controllers
         }
 
         // GET: Goods
+        [Route("/Goods/List")]
         public async Task<IActionResult> Index()
         {
             var list = await _context.Goods.Include("Brand").Where(g => g.IsDelete).ToListAsync();

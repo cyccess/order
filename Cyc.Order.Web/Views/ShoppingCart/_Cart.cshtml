@@ -1,9 +1,9 @@
-﻿@model IEnumerable<ShoppingCartViewModel>
+﻿@model ShoppingCartViewModel
 
 <table class="table">
     <thead>
         <tr>
-            <th><input type="checkbox" value="" />选择</th>
+            <th><input type="checkbox" id="chkAll" @(Model.CheckedAll?"checked":"")/>选择</th>
             <th>
                 商品
             </th>
@@ -20,11 +20,11 @@
         </tr>
     </thead>
     <tbody class="cart-tbody">
-        @foreach (var item in Model)
+        @foreach (var item in Model.ShoppingCartGoodsModels)
         {
             <tr class="product_@item.Id">
                 <td>
-                    <input type="checkbox" value="@item.Id" />
+                    <input type="checkbox" value="@item.Id" @(item.Checked?"checked":"")/>
                 </td>
                 <td>
                     <div class="c-name">
@@ -34,7 +34,7 @@
                     <div class="c-props">规格:@Html.DisplayFor(modelItem => item.GoodsSepc)</div>
                 </td>
                 <td>
-                    ¥9.90
+                    ¥@item.Price
                 </td>
                 <td>
                     <div class="c-quantity">
@@ -45,7 +45,7 @@
                 </td>
                 <td>
                     <div class="c-sum">
-                        <strong>¥9.90</strong>
+                        <strong>¥@(item.Price*item.Num)</strong>
                     </div>
                 </td>
 
@@ -58,22 +58,27 @@
 
 </table>
 
-<div class="cart-empty">购物车是空的~</div>
+@if(Model.ShoppingCartGoodsModels.Count() == 0)
+{
+<div class="cart-empty">
+    <p>购物车是空的~</p>
+    <a href="#"><i class="pe-7s-cart"></i>去选购</a>
+</div>  
+}
 
 <div class="cart-toolbar fixed-bottom">
     <div class="toolbar-wrap">
         <div class="btn-area">
-            <input type="button" class="btn btn-danger" value="去结算" />
+            <input type="button" class="btn btn-danger btn-submit" value="去结算" />
         </div>
 
         <div class="price-sum">
             <span class="">总价：</span>
-            <span class="price"><em>¥@TempData["priceSum"]</em></span>
+            <span class="price"><em>¥@Model.PriceSum</em></span>
         </div>
 
         <div class="amount-sum">
-            已选择<em>@TempData["amountSum"]</em>件商品
+            已选择<em>@Model.AmountSum</em>件商品
         </div>
     </div>
 </div>
-

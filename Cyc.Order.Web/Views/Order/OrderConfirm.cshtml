@@ -1,0 +1,86 @@
+﻿@model PreOrderViewModel
+@{
+    ViewData["Title"] = "订单结算页";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="panel panel-default order-con">
+    <div class="panel-body">
+        <div class="address">
+            <h4>收货人信息</h4>
+            <div class="row order-info-item">
+                <span class="col-md-2">收货人：</span>
+                <div class="col-md-10">@Model.Shop.Name</div>
+            </div>
+
+            <div class="row order-info-item">
+                <span class="col-md-2">地址：</span>
+                <div class="col-md-10">@Model.Shop.Address</div>
+            </div>
+
+            <div class="row order-info-item">
+                <span class="col-md-2">手机号码：</span>
+                <div class="col-md-10">@Model.Shop.Phone</div>
+            </div>
+        </div>
+        <hr />
+
+        <h4>送货清单</h4>
+        <div class="shopping-lists table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>商品</th>
+                        <th>单价</th>
+                        <th>数量</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model.OrderRecordDetails)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>
+                            <span class="s-price">¥@item.Price</span>
+                        </td>
+                        <td>
+                            <span>x</span><span>@item.Num</span>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+        <hr />
+        <div class="text-danger goods-total">
+            <span>应付总额：</span>
+            <span class="count">¥@Model.OrderRecord.TotalAmount</span>
+        </div>
+    </div>
+</div>
+
+<div class="order-con-btns">
+    <button class="btn btn-danger btn-fill order-submit" data-oid="@Model.OrderRecord.Id">提交订单</button>
+</div>
+<div>
+    <a asp-action="Index">返回订单列表</a>
+</div>
+@section Scripts{
+    <script>
+        $(function () {
+            $(".order-submit").on("click", function () {
+                var oid = $(this).data("oid");
+                $.post("/Order/SubmitOrder", { oid: oid }, function (res) {
+                    if (res.code === 100) {
+                        location.href = res.data;
+                    }
+                    else {
+                        swal('提交订单!', res.message, 'error').then(function () {
+                            
+                        });
+                    }
+                });
+            });
+        })
+    </script>
+}

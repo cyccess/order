@@ -19,8 +19,14 @@ namespace Cyc.Order.Data.DataModel
         [Column("num")]
         public int Num { get; set; }
 
-        [Column("price")]
-        public decimal Price { get; set; }
+        [Column("pay_price")]
+        public decimal? PayPrice { get; set; }
+
+        [Column("is_pay")]
+        public bool? IsPay { get; set; }
+
+        [Column("pay_time")]
+        public DateTime? PayTime { get; set; }
 
         [Column("total_amount")]
         public decimal TotalAmount { get; set; }
@@ -32,10 +38,10 @@ namespace Cyc.Order.Data.DataModel
         public int Status { get; set; }
 
         [Column("end_date")]
-        public DateTime EndDate { get; set; }
+        public DateTime? EndDate { get; set; }
 
         [Column("region_id")]
-        public int RegionId { get; set; }
+        public int? RegionId { get; set; }
 
         [Column("mobile_phone")]
         public string MobilePhone { get; set; }
@@ -45,5 +51,8 @@ namespace Cyc.Order.Data.DataModel
 
         [Column("address")]
         public string Address { get; set; }
+
+        [Column("update_date")]
+        public DateTime? UpdateDate { get; set; }
     }
 }

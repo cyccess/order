@@ -138,12 +138,17 @@
     text-align:right;
 }
 .goods-total .count {
+    font-family:Verdana;
     font-size: 18px;
     font-weight: 700;
 }
 
 .cart-content{
     position:relative;
+}
+
+.cart-content #chkAll {
+    vertical-align:text-bottom;
 }
 
 .cart-tbody {
@@ -186,6 +191,7 @@
     float:left;
     color:#666;
 }
+
 
 .cart-toolbar {
     height: 50px;
@@ -254,10 +260,21 @@
     margin: 0 3px;
 }
 .cart-empty{
-   display:none;
    text-align:center;
 }
 
 @media (max-width: 991px) {
     .cart-toolbar{width:100%;}
+}
+
+.order-con .s-price {
+    font-family: Verdana;
+    font-weight:700;
+    color: #FF4A55;
+}
+.order-con-btns {
+    text-align: right;
+}
+.order-con-btns .order-submit {
+    font-weight:700;
 }

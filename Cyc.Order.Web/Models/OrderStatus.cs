@@ -10,6 +10,8 @@ namespace Cyc.Order.Web.Models
     /// </summary>
     public enum OrderStatus
     {
+        Default = 0,
+
         /// <summary>
         /// 待发货
         /// </summary>

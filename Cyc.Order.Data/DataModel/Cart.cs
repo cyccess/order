@@ -22,8 +22,14 @@ namespace Cyc.Order.Data.DataModel
         [Column("num")]
         public int Num { get; set; }
 
+        /// <summary>
+        /// 购车商品状态 0 默认 1 已删除  2 无效
+        /// </summary>
         [Column("status")]
         public int Status { get; set; }
+
+        [Column("checked")]
+        public bool Checked { get; set; }
 
         [Column("create_time")]
         public DateTime CreateTime { get; set; }

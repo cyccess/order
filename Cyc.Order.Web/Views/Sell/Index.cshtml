@@ -57,7 +57,7 @@
 
             $(".add-cart").on("click", function () {
                 var id = $(this).data("id");
-                $.post("/sellgoods/AddCart", { goodsId:id }, function (data) {
+                $.post("/ShoppingCart/AddCart", { goodsId:id }, function (data) {
                     $.notify({
                         message: data.message,
                         icon: 'pe-7s-check',

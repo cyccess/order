@@ -10,19 +10,21 @@ using System.Threading.Tasks;
 namespace Cyc.Order.Web.Controllers
 {
     [Authorize(Roles = "admin,system")]
-    public class OrderRecordsController : Controller
+    public class TradeController : Controller
     {
         private readonly OrderDbContext _context;
 
-        public OrderRecordsController(OrderDbContext context)
+        public TradeController(OrderDbContext context)
         {
             _context = context;
         }
 
         // GET: OrderRecords
+        [Route("/Order/List")]
         public async Task<IActionResult> Index(string consignee, string mobilePhone, int status = 0)
         {
-            var query = _context.OrderRecords.AsQueryable();
+            int[] s = { 1, 10, 99 };
+            var query = _context.OrderRecords.AsQueryable().Where(o=>s.Contains(o.Status));
 
             if (!string.IsNullOrEmpty(consignee))
             {
