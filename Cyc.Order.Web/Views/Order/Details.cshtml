@@ -21,11 +21,7 @@
                 @if (Model.OrderRecord.Status == (int)OrderStatus.Undelivered)
                 {
                     <div class="state-btn">
-                        <a class="btn btn-danger delivery-confirmed" href="#" data-id="@Model.OrderRecord.Id">确认发货</a>
-                    </div>
-
-                    <div class="state-bottom">
-                        <a href="#" class="order-cancel text-muted" data-id="@Model.OrderRecord.Id"><i class="fa fa-minus-circle"></i>取消订单</a>
+                        <a class="btn btn-default order-cancel " href="#" data-id="@Model.OrderRecord.Id">取消订单</a>
                     </div>
                 }
             </div>
@@ -65,7 +61,7 @@
                     @foreach (var item in Model.OrderRecordDetails)
                     {
                         <tr>
-                            <td><a asp-controller="Goods" asp-action="Details" asp-route-id="@item.GoodsId">@item.Name</a></td>
+                            <td><a asp-controller="Sell" asp-action="Details" asp-route-id="@item.GoodsId">@item.Name</a></td>
                             <td>@item.Code</td>
                             <td>@item.Price</td>
                             <td>
@@ -92,30 +88,11 @@
 @section Scripts{
     <script>
         $(function () {
-            $(".delivery-confirmed").on("click", function () {
-                var id = $(this).data("id");
-                swal({
-                    title: '确定此订单已发货吗？',
-                    type: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: '确定发货',
-                    cancelButtonText: '取消'
-                }).then(function () {
-                    $.post("/OrderRecords/Delivery", { id: id }, function (data) {
-                        swal('确认发货!', data.message, 'success').then(function () {
-                            location.reload();
-                        });
-                        
-                    });
-                }).catch(swal.noop);
-            });
-
             $(".order-cancel").on("click", function () {
                 var id = $(this).data("id");
                 swal({
                     title: '确定取消此订单吗？',
+                    text: '订单取消后，将不能恢复',
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
@@ -123,7 +100,7 @@
                     confirmButtonText: '确定取消',
                     cancelButtonText: '取消'
                 }).then(function () {
-                    $.post("/OrderRecords/CancelOrder", { id: id }, function (data) {
+                    $.post("/Order/CancelOrder", { id: id }, function (data) {
                         swal('订单取消!', data.message, 'success').then(function () {
                             location.reload();
                         });

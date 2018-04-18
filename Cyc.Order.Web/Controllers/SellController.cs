@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Sakura.AspNetCore;
 
 namespace Cyc.Order.Web.Controllers
 {
@@ -14,16 +15,17 @@ namespace Cyc.Order.Web.Controllers
     public class SellController : Controller
     {
         private readonly OrderDbContext _context;
-
+        
         public SellController(OrderDbContext context)
         {
             _context = context;
         }
 
         [Route("/Sell/List")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
-            var list = await _context.Goods.Include("Brand").Where(g => g.IsDelete).ToListAsync();
+            var list = await _context.Goods.Include("Brand").Where(g => g.IsDelete)
+                .ToPagedListAsync(20, page);
             return View(list);
         }
 

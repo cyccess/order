@@ -1,4 +1,125 @@
-﻿
-@*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model OrderRecordViewModel
+@{
+    ViewData["Title"] = "订单列表";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="panel panel-default">
+    <div class="panel-body">
+        <form asp-action="Index" class="form-inline" method="get">
+            <div class="form-group">
+                <label class="control-label">收货人：</label>
+                <input class="form-control" asp-for="consignee">
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">手机号：</label>
+                <input class="form-control" asp-for="mobilePhone">
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">订单状态：</label>
+                <select class="form-control" asp-for="status">
+                    <option value="">--请选择--</option>
+                    <option value="1">待发货</option>
+                    <option value="10">已发货</option>
+                    <option value="99">已取消</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <button class="btn btn-info" type="submit"><i class="fa fa-search"></i>查询</button>
+            </div>
+        </form>
+    </div>
+</div>
+<hr />
+<div class="table-responsive">
+    <table class="table order-table">
+        <thead>
+            <tr>
+                <th>订单号</th>
+                <th>总金额</th>
+                <th>商品数量</th>
+                <th>手机号</th>
+                <th>收货人</th>
+                <th>收货地址</th>
+                <th>订单日期</th>
+                <th class="text-center">订单状态</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.OrderRecords)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Id)</td>
+                    <td>
+                        <span>￥</span>@Html.DisplayFor(modelItem => item.TotalAmount)
+                    </td>
+                    <td>
+                        <div class="text-muted">
+                            <span>x</span><span>@Html.DisplayFor(modelItem => item.Num)</span>
+                        </div>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MobilePhone)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Consignee)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Address)
+                    </td>
+                    <td>
+                        @item.OrderDate.ToString("yyyy-MM-dd HH:mm")
+                    </td>
+                    <td>
+                        <div class="status">
+                            @await Html.PartialAsync("_OrderStatus", (OrderStatus)item.Status)
+                            <br />
+                            <a class="text-somber" asp-action="Details" asp-route-id="@item.Id">订单详情</a>
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <div class="operate">
+                            @if (item.Status == (int)OrderStatus.Undelivered)
+                            {
+                                <a class="order-cancel" href="#" data-id="@item.Id">取消订单</a>
+                            }
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div class="text-center">
+    <ul class="pagination">
+        <pager generation-mode="ListOnly" source="Model.OrderRecords" />
+    </ul>
+</div>
+@section Scripts{
+    <script>
+        $(function () {
+
+            $(".order-cancel").on("click", function () {
+                var id = $(this).data("id");
+                swal({
+                    title: '确定取消此订单吗？',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '确定取消',
+                    cancelButtonText: '取消'
+                }).then(function () {
+                    $.post("/Order/CancelOrder", { id: id }, function (data) {
+                        swal('订单取消!', data.message, 'success').then(function () {
+                            location.reload();
+                        });
+                    });
+                }).catch(swal.noop);
+            });
+        })
+    </script>
+}

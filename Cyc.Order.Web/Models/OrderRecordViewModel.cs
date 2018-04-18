@@ -1,4 +1,5 @@
 ﻿using Cyc.Order.Data.DataModel;
+using Sakura.AspNetCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ namespace Cyc.Order.Web.Models
 {
     public class OrderRecordViewModel
     {
-        public List<OrderRecord> OrderRecords;
+        public IPagedList<OrderRecord> OrderRecords;
 
         public string consignee { get; set; }
 

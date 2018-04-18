@@ -4,6 +4,8 @@ using Cyc.Order.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Sakura.AspNetCore;
+using Sakura.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -21,10 +23,10 @@ namespace Cyc.Order.Web.Controllers
 
         // GET: OrderRecords
         [Route("/Order/List")]
-        public async Task<IActionResult> Index(string consignee, string mobilePhone, int status = 0)
+        public async Task<IActionResult> Index(string consignee, string mobilePhone, int status = 0, int page = 1)
         {
             int[] s = { 1, 10, 99 };
-            var query = _context.OrderRecords.AsQueryable().Where(o=>s.Contains(o.Status));
+            var query = _context.OrderRecords.AsQueryable().Where(o => s.Contains(o.Status));
 
             if (!string.IsNullOrEmpty(consignee))
             {
@@ -47,7 +49,7 @@ namespace Cyc.Order.Web.Controllers
             model.consignee = consignee;
             model.mobilePhone = mobilePhone;
             model.status = status;
-            model.OrderRecords = await query.ToListAsync();
+            model.OrderRecords = await query.ToPagedListAsync(20, page);
 
             return View(model);
         }
@@ -94,11 +96,6 @@ namespace Cyc.Order.Web.Controllers
             orderRecord.Status = (int)OrderStatus.Cancel;
             await _context.SaveChangesAsync();
             return Json(new { message = "订单取消成功！" });
-        }
-
-        private bool OrderRecordExists(int id)
-        {
-            return _context.OrderRecords.Any(e => e.Id == id);
         }
     }
 }

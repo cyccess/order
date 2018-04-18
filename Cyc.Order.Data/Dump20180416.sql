@@ -27,11 +27,12 @@ CREATE TABLE `order_cart` (
   `shop_id` int(11) DEFAULT NULL COMMENT '便利店编号',
   `goods_id` int(11) DEFAULT NULL COMMENT '商品编号',
   `num` int(11) DEFAULT NULL COMMENT '商品数量',
-  `status` int(11) DEFAULT NULL COMMENT '订单状态',
+  `checked` tinyint(4) DEFAULT '1',
+  `status` int(11) DEFAULT NULL COMMENT '购物车状态 1 默认 2 已提交',
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8 COMMENT='购物车';
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8 COMMENT='购物车';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,7 +41,7 @@ CREATE TABLE `order_cart` (
 
 LOCK TABLES `order_cart` WRITE;
 /*!40000 ALTER TABLE `order_cart` DISABLE KEYS */;
-INSERT INTO `order_cart` VALUES (1,1,1,1,1,'2018-04-05 14:16:36',NULL),(2,1,1,1,1,'2018-04-09 22:22:08',NULL),(3,1,1,1,1,'2018-04-09 22:22:09',NULL),(4,1,1,1,1,'2018-04-09 22:22:28',NULL),(5,1,1,1,1,'2018-04-09 22:31:20',NULL),(6,1,1,1,1,'2018-04-09 22:31:38',NULL),(7,1,2,1,1,'2018-04-09 22:31:59',NULL),(8,1,1,1,1,'2018-04-09 23:13:11',NULL);
+INSERT INTO `order_cart` VALUES (17,1,1,7,1,2,'2018-04-16 22:36:44','2018-04-16 22:47:41'),(18,1,2,4,1,2,'2018-04-16 22:36:46','2018-04-16 22:47:41'),(19,1,1,4,1,1,'2018-04-16 22:49:27','2018-04-16 22:49:44'),(20,1,2,4,1,2,'2018-04-16 22:49:28','2018-04-16 23:04:23'),(21,1,1,2,1,2,'2018-04-16 22:58:18','2018-04-16 23:04:22'),(22,1,1,1,1,1,'2018-04-16 23:27:11','2018-04-16 23:27:17'),(23,1,2,2,1,2,'2018-04-16 23:27:56','2018-04-16 23:28:01'),(24,1,1,2,1,2,'2018-04-16 23:27:57','2018-04-16 23:28:01');
 /*!40000 ALTER TABLE `order_cart` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -114,7 +115,7 @@ CREATE TABLE `order_goods_price` (
   `goods_price` decimal(10,2) DEFAULT NULL COMMENT '商品价格',
   `shop_id` int(11) DEFAULT NULL COMMENT '店铺ID，如果为NULL表示该价格适用所有店铺',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COMMENT='商品价格表';
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COMMENT='商品价格表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -123,7 +124,7 @@ CREATE TABLE `order_goods_price` (
 
 LOCK TABLES `order_goods_price` WRITE;
 /*!40000 ALTER TABLE `order_goods_price` DISABLE KEYS */;
-INSERT INTO `order_goods_price` VALUES (1,1,100.00,NULL),(2,2,139.00,NULL);
+INSERT INTO `order_goods_price` VALUES (1,1,100.00,NULL),(2,2,139.00,NULL),(3,1,88.00,2),(4,2,99.00,2);
 /*!40000 ALTER TABLE `order_goods_price` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -160,18 +161,21 @@ DROP TABLE IF EXISTS `order_record`;
 CREATE TABLE `order_record` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `shop_id` int(11) DEFAULT NULL COMMENT '店铺ID',
-  `price` decimal(10,0) DEFAULT NULL COMMENT '单价',
+  `pay_price` decimal(10,2) DEFAULT NULL COMMENT '实际支付价格',
+  `is_pay` tinyint(4) DEFAULT NULL COMMENT '是否已支付 0未支付 1已支付',
+  `pay_time` datetime DEFAULT NULL COMMENT '支付时间',
   `num` int(11) DEFAULT NULL COMMENT '商品数量',
-  `total_amount` decimal(10,0) DEFAULT NULL COMMENT '总额',
-  `status` int(11) DEFAULT NULL COMMENT '订单状态',
+  `total_amount` decimal(10,2) DEFAULT NULL COMMENT '总额',
+  `status` int(11) DEFAULT NULL COMMENT '订单状态 ',
   `order_date` datetime DEFAULT NULL COMMENT '订单日期',
   `end_date` datetime DEFAULT NULL COMMENT '订单结束日期',
   `region_id` int(11) DEFAULT NULL COMMENT '订单所属区域编号',
   `consignee` varchar(45) DEFAULT NULL,
   `mobile_phone` varchar(45) DEFAULT NULL,
   `address` varchar(200) DEFAULT NULL,
+  `update_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1000002 DEFAULT CHARSET=utf8 COMMENT='订单记录表';
+) ENGINE=InnoDB AUTO_INCREMENT=1000048 DEFAULT CHARSET=utf8 COMMENT='订单记录表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -180,7 +184,7 @@ CREATE TABLE `order_record` (
 
 LOCK TABLES `order_record` WRITE;
 /*!40000 ALTER TABLE `order_record` DISABLE KEYS */;
-INSERT INTO `order_record` VALUES (1000000,1,11,1,11,1,'2018-03-31 18:00:00','2018-03-31 00:00:00',1,'京东便利店','18580760011','九龙坡区兴燕路'),(1000001,1,11,1,11,10,'2018-03-31 00:00:00','2018-03-31 00:00:00',1,'便利店','15030027676','九龙坡区兴燕路');
+INSERT INTO `order_record` VALUES (1000039,1,917.00,NULL,NULL,8,917.00,1,'2018-04-16 22:36:56',NULL,NULL,'京东便利店','1853302022','杨家坪西郊路-北大资源燕南5街区','2018-04-16 22:36:59'),(1000040,1,417.00,NULL,NULL,3,417.00,0,'2018-04-16 22:58:25',NULL,NULL,NULL,NULL,NULL,NULL),(1000041,1,517.00,NULL,NULL,4,517.00,0,'2018-04-16 22:58:32',NULL,NULL,NULL,NULL,NULL,NULL),(1000042,1,517.00,NULL,NULL,4,517.00,0,'2018-04-16 23:00:31',NULL,NULL,NULL,NULL,NULL,NULL),(1000043,1,756.00,NULL,NULL,6,756.00,0,'2018-04-16 23:04:28',NULL,NULL,NULL,NULL,NULL,NULL),(1000044,1,756.00,NULL,NULL,6,756.00,1,'2018-04-16 23:07:03',NULL,NULL,'京东便利店','1853302022','杨家坪西郊路-北大资源燕南5街区','2018-04-16 23:07:04'),(1000045,1,478.00,NULL,NULL,4,478.00,0,'2018-04-16 23:28:04',NULL,NULL,NULL,NULL,NULL,NULL),(1000046,1,478.00,NULL,NULL,4,478.00,0,'2018-04-16 23:28:22',NULL,NULL,NULL,NULL,NULL,NULL),(1000047,1,478.00,NULL,NULL,4,478.00,1,'2018-04-16 23:28:37',NULL,NULL,'京东便利店','1853302022','杨家坪西郊路-北大资源燕南5街区','2018-04-16 23:28:40');
 /*!40000 ALTER TABLE `order_record` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -198,11 +202,11 @@ CREATE TABLE `order_record_detail` (
   `goods_code` varchar(20) DEFAULT NULL,
   `goods_name` varchar(200) DEFAULT NULL,
   `goods_img` varchar(200) DEFAULT NULL,
-  `goods_price` decimal(10,0) DEFAULT NULL,
+  `goods_price` decimal(10,2) DEFAULT NULL,
   `goods_num` int(11) DEFAULT NULL,
   `add_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COMMENT='订单记录详情表';
+) ENGINE=InnoDB AUTO_INCREMENT=91 DEFAULT CHARSET=utf8 COMMENT='订单记录详情表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -211,7 +215,7 @@ CREATE TABLE `order_record_detail` (
 
 LOCK TABLES `order_record_detail` WRITE;
 /*!40000 ALTER TABLE `order_record_detail` DISABLE KEYS */;
-INSERT INTO `order_record_detail` VALUES (1,1000000,1,'2003230220','奶牛梦工厂原味 150g/杯',NULL,99,1,'2018-03-31 00:00:00');
+INSERT INTO `order_record_detail` VALUES (74,1000039,1,'6934652192754','奶牛梦工厂原味','http://localhost:55178/images/636581121022115086.jpg',100.00,5,'2018-04-16 22:36:56'),(75,1000039,2,'323232323','安慕希','http://localhost:55178/images/636581121969365193.jpg',139.00,3,'2018-04-16 22:36:56'),(76,1000040,2,'323232323','安慕希','http://localhost:55178/images/636581121969365193.jpg',139.00,3,'2018-04-16 22:58:25'),(77,1000041,2,'323232323','安慕希','http://localhost:55178/images/636581121969365193.jpg',139.00,3,'2018-04-16 22:58:32'),(78,1000041,1,'6934652192754','奶牛梦工厂原味','http://localhost:55178/images/636581121022115086.jpg',100.00,1,'2018-04-16 22:58:32'),(79,1000042,2,'323232323','安慕希','http://localhost:55178/images/636581121969365193.jpg',139.00,3,'2018-04-16 23:00:31'),(80,1000042,1,'6934652192754','奶牛梦工厂原味','http://localhost:55178/images/636581121022115086.jpg',100.00,1,'2018-04-16 23:00:31'),(81,1000043,2,'323232323','安慕希','http://localhost:55178/images/636581121969365193.jpg',139.00,4,'2018-04-16 23:04:28'),(82,1000043,1,'6934652192754','奶牛梦工厂原味','http://localhost:55178/images/636581121022115086.jpg',100.00,2,'2018-04-16 23:04:28'),(83,1000044,2,'323232323','安慕希','http://localhost:55178/images/636581121969365193.jpg',139.00,4,'2018-04-16 23:07:03'),(84,1000044,1,'6934652192754','奶牛梦工厂原味','http://localhost:55178/images/636581121022115086.jpg',100.00,2,'2018-04-16 23:07:03'),(85,1000045,2,'323232323','安慕希','http://localhost:55178/images/636581121969365193.jpg',139.00,2,'2018-04-16 23:28:04'),(86,1000045,1,'6934652192754','奶牛梦工厂原味','http://localhost:55178/images/636581121022115086.jpg',100.00,2,'2018-04-16 23:28:04'),(87,1000046,2,'323232323','安慕希','http://localhost:55178/images/636581121969365193.jpg',139.00,2,'2018-04-16 23:28:22'),(88,1000046,1,'6934652192754','奶牛梦工厂原味','http://localhost:55178/images/636581121022115086.jpg',100.00,2,'2018-04-16 23:28:22'),(89,1000047,2,'323232323','安慕希','http://localhost:55178/images/636581121969365193.jpg',139.00,2,'2018-04-16 23:28:37'),(90,1000047,1,'6934652192754','奶牛梦工厂原味','http://localhost:55178/images/636581121022115086.jpg',100.00,2,'2018-04-16 23:28:37');
 /*!40000 ALTER TABLE `order_record_detail` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -265,7 +269,7 @@ CREATE TABLE `order_shop` (
 
 LOCK TABLES `order_shop` WRITE;
 /*!40000 ALTER TABLE `order_shop` DISABLE KEYS */;
-INSERT INTO `order_shop` VALUES (1,'京东便利店','1853302022','123',NULL,'111',1,'2018-03-31 00:00:00');
+INSERT INTO `order_shop` VALUES (1,'京东便利店','1853302022','123','Mainly electronic','杨家坪西郊路-北大资源燕南5街区',1,'2018-03-31 00:00:00');
 /*!40000 ALTER TABLE `order_shop` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -286,4 +290,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-04-09 23:23:59
+-- Dump completed on 2018-04-16 23:30:09

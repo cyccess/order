@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Sakura.AspNetCore;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http.Headers;
-using System.Net.Mime;
 using System.Threading.Tasks;
 
 namespace Cyc.Order.Web.Controllers
@@ -30,9 +30,10 @@ namespace Cyc.Order.Web.Controllers
 
         // GET: Goods
         [Route("/Goods/List")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int page = 1)
         {
-            var list = await _context.Goods.Include("Brand").Where(g => g.IsDelete).ToListAsync();
+            var list = await _context.Goods.Include("Brand").Where(g => g.IsDelete)
+                .ToPagedListAsync(20, page);
             return View(list);
         }
 

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Cyc.Order.Data.DataModel.Goods>
+﻿@model Sakura.AspNetCore.IPagedList<Goods>
 @{
     ViewData["Title"] = "商品订购";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -51,6 +51,11 @@
         }
     </tbody>
 </table>
+<div class="text-center">
+    <ul class="pagination">
+        <pager generation-mode="ListOnly"/>
+    </ul>
+</div>
 @section Scripts{
     <script>
         $(function () {

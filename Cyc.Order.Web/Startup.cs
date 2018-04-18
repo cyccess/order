@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Sakura.AspNetCore.Mvc;
 
 namespace Cyc.Order.Web
 {
@@ -37,6 +38,13 @@ namespace Cyc.Order.Web
                  options.LoginPath = new PathString("/login");
                  options.AccessDeniedPath = new PathString("/denied");
              });
+
+            services.AddBootstrapPagerGenerator(options =>
+            {
+                options.HideOnSinglePage = true;
+                // Use default pager options.
+                options.ConfigureDefault();
+            });
         }
 
 

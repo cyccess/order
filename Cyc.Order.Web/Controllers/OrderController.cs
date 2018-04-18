@@ -6,6 +6,7 @@ using Cyc.Order.Data;
 using Cyc.Order.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Sakura.AspNetCore;
 
 namespace Cyc.Order.Web.Controllers
 {
@@ -18,10 +19,72 @@ namespace Cyc.Order.Web.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index(string consignee, string mobilePhone, int status = 0, int page = 1)
         {
-            return View();
+            int[] s = { 1, 10, 99 };
+            var query = _context.OrderRecords.Where(o => o.ShopId == 1 && s.Contains(o.Status));
+
+            if (!string.IsNullOrEmpty(consignee))
+            {
+                query = query.Where(o => o.Consignee == consignee);
+            }
+
+            if (!string.IsNullOrEmpty(mobilePhone))
+            {
+                query = query.Where(o => o.MobilePhone == mobilePhone);
+            }
+
+            if (status != 0)
+            {
+                query = query.Where(o => o.Status == status);
+            }
+
+            query = query.OrderByDescending(o => o.OrderDate);
+
+            var model = new OrderRecordViewModel();
+            model.consignee = consignee;
+            model.mobilePhone = mobilePhone;
+            model.status = status;
+            model.OrderRecords = await query.ToPagedListAsync(20, page);
+
+            return View(model);
         }
+
+        // GET: Order/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var orderRecord = await _context.OrderRecords
+                .SingleOrDefaultAsync(m => m.Id == id && m.ShopId == 1);
+            if (orderRecord == null)
+            {
+                return NotFound();
+            }
+
+            var orderRecordDetails = await _context.OrderRecordDetails
+                .Where(o => o.OrderId == orderRecord.Id)
+                .ToListAsync();
+            var model = new OrderDetailViewModel();
+            model.OrderRecord = orderRecord;
+            model.OrderRecordDetails = orderRecordDetails;
+
+            return View(model);
+        }
+
+        [HttpPost, ActionName("CancelOrder")]
+        public async Task<IActionResult> CancelOrder(int id)
+        {
+            var orderRecord = await _context.OrderRecords
+                .SingleOrDefaultAsync(m => m.Id == id && m.ShopId == 1);
+            orderRecord.Status = (int)OrderStatus.Cancel;
+            await _context.SaveChangesAsync();
+            return Json(new { message = "订单取消成功！" });
+        }
+
 
         //确认订单
         public async Task<IActionResult> OrderConfirm(int oid)
@@ -88,5 +151,8 @@ namespace Cyc.Order.Web.Controllers
             ViewData["OrderId"] = orderId;
             return View();
         }
+
+
+
     }
 }
