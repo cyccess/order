@@ -20,6 +20,6 @@ namespace Cyc.Order.Data.DataModel
         public decimal Price { get; set; }
 
         [Column("shop_id")]
-        public int? ShopId { get; set; }
+        public int ShopId { get; set; }
     }
 }

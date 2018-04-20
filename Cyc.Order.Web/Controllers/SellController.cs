@@ -15,7 +15,7 @@ namespace Cyc.Order.Web.Controllers
     public class SellController : Controller
     {
         private readonly OrderDbContext _context;
-        
+
         public SellController(OrderDbContext context)
         {
             _context = context;
@@ -24,7 +24,7 @@ namespace Cyc.Order.Web.Controllers
         [Route("/Sell/List")]
         public async Task<IActionResult> Index(int page = 1)
         {
-            var list = await _context.Goods.Include("Brand").Where(g => g.IsDelete)
+            var list = await _context.Goods.Include("Brand").Where(g => !g.IsDelete)
                 .ToPagedListAsync(20, page);
             return View(list);
         }
@@ -37,7 +37,7 @@ namespace Cyc.Order.Web.Controllers
             }
 
             var goods = await _context.Goods.Include("Brand")
-                .SingleOrDefaultAsync(m => m.Id == id);
+                .SingleOrDefaultAsync(m => m.Id == id && !m.IsDelete);
             if (goods == null)
             {
                 return NotFound();

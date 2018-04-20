@@ -1,75 +1,69 @@
-﻿@model Cyc.Order.Data.DataModel.Goods
+﻿@model Cyc.Order.Data.DataModel.Shop
+
 @{
-    ViewData["Title"] = Model.GoodsName;
+    ViewData["Title"] = "店铺 - "+Model.Name;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 <div class="card">
     <div class="content">
         <section class="form-horizontal">
             <div class="form-group">
-                <label class="col-sm-2 control-label">商品图片</label>
+                <label class="col-sm-2 control-label">
+                    店铺名称
+                </label>
                 <div class="col-sm-10">
                     <p class="form-control-static">
-                        <img src="@Html.DisplayFor(model => model.GoodsImg)" alt="Alternate Text" width="135" height="135" />
+                        @Html.DisplayFor(model => model.Name)
                     </p>
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="col-sm-2 control-label">
-                    商品名称
+                    所在区域
                 </label>
                 <div class="col-sm-10">
                     <p class="form-control-static">
-                        @Html.DisplayFor(model => model.GoodsName)
+                        @Html.DisplayFor(model => model.Region.Name)
                     </p>
                 </div>
             </div>
 
             <div class="form-group">
                 <label class="col-sm-2 control-label">
-                    商品编码
+                    联系人
                 </label>
                 <div class="col-sm-10">
                     <p class="form-control-static">
-                        @Html.DisplayFor(model => model.GoodsCode)
+                        @Html.DisplayFor(model => model.Linkman)
                     </p>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label">
-                    品牌
+                    地址
                 </label>
                 <div class="col-sm-10">
                     <p class="form-control-static">
-                        @Html.DisplayFor(model => model.Brand.Name)
+                        @Html.DisplayFor(model => model.Address)
                     </p>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-2 control-label">
-                    商品规格
+                    添加时间
                 </label>
                 <div class="col-sm-10">
                     <p class="form-control-static">
-                        @Html.DisplayFor(model => model.GoodsSepc)
-                    </p>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-2 control-label">
-                    单位
-                </label>
-                <div class="col-sm-10">
-                    <p class="form-control-static">
-                        @Html.DisplayFor(model => model.GoodsUnit)
+                        @Html.DisplayFor(model => model.AddDate)
                     </p>
                 </div>
             </div>
         </section>
-        
     </div>
 </div>
 <div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">修改</a> |
     <a asp-action="Index">返回列表</a>
 </div>

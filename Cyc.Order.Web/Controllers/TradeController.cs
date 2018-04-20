@@ -1,11 +1,9 @@
 ﻿using Cyc.Order.Data;
-using Cyc.Order.Data.DataModel;
 using Cyc.Order.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sakura.AspNetCore;
-using Sakura.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
 

@@ -21,7 +21,7 @@ namespace Cyc.Order.Data
         public DbSet<OrderRecordDetail> OrderRecordDetails { get; set; }
         public DbSet<Cart> Carts { get; set; }
         public DbSet<GoodsPrice> GoodsPrices { get; set; }
-
+        public DbSet<Region> Regions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

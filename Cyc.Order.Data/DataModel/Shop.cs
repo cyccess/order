@@ -13,15 +13,21 @@ namespace Cyc.Order.Data.DataModel
         [Column("id")]
         public int Id { get; set; }
 
+        [Required]
         [Column("name")]
         public string Name { get; set; }
 
+        [Required]
         [Column("phone")]
         public string Phone { get; set; }
 
         [Column("password")]
         public string Password { get; set; }
 
+        [Column("linkman")]
+        public string Linkman { get; set; }
+
+        [Required]
         [Column("address")]
         public string Address { get; set; }
 
@@ -30,6 +36,12 @@ namespace Cyc.Order.Data.DataModel
 
         [Column("add_date")]
         public DateTime AddDate { get; set; }
+
+        [Column("is_delete")]
+        public bool IsDelete { get; set; }
+
+
+        public virtual Region Region { get; set; }
 
     }
 }

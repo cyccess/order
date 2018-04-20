@@ -1,5 +1,6 @@
 ﻿using Cyc.Order.Data;
 using Cyc.Order.Data.DataModel;
+using Cyc.Order.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -30,11 +31,26 @@ namespace Cyc.Order.Web.Controllers
 
         // GET: Goods
         [Route("/Goods/List")]
-        public async Task<IActionResult> Index(int page = 1)
+        public async Task<IActionResult> Index(string goodsName, int brandId = 0, int page = 1)
         {
-            var list = await _context.Goods.Include("Brand").Where(g => g.IsDelete)
-                .ToPagedListAsync(20, page);
-            return View(list);
+            var query = _context.Goods.Where(g => !g.IsDelete);
+
+            if (!string.IsNullOrEmpty(goodsName))
+            {
+                query = query.Where(s => s.GoodsName.StartsWith(goodsName));
+            }
+            if (brandId != 0)
+            {
+                query = query.Where(s => s.BrandId == brandId);
+
+            }
+            var viewModel = new GoodsViewModel();
+            viewModel.Goods = await query.ToPagedListAsync(20, page);
+            viewModel.Brands = await _context.Brands.ToListAsync();
+            viewModel.GoodsName = goodsName;
+            viewModel.BrandId = brandId;
+
+            return View(viewModel);
         }
 
         // GET: Goods/Details/5
@@ -64,15 +80,26 @@ namespace Cyc.Order.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,BrandId,GoodsImg,GoodsCode,GoodsName,GoodsSepc,GoodsUnit,AddTime")] Goods goods)
+        public async Task<IActionResult> Create([Bind("Id,BrandId,GoodsImg,GoodsCode,GoodsName,GoodsSepc,GoodsUnit,AddTime")] Goods goods, decimal price = 0)
         {
             if (ModelState.IsValid)
             {
                 goods.Status = 1;
-                goods.IsDelete = true;
+                goods.IsDelete = false;
                 goods.AddTime = DateTime.Now;
                 _context.Add(goods);
                 await _context.SaveChangesAsync();
+
+                if (price > 0)
+                {
+                    GoodsPrice goodsPrice = new GoodsPrice();
+                    goodsPrice.GoodsId = goods.Id;
+                    goodsPrice.Price = price;
+                    goodsPrice.ShopId = 0;
+                    _context.Add(goodsPrice);
+                    await _context.SaveChangesAsync();
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             return View(goods);
@@ -91,14 +118,18 @@ namespace Cyc.Order.Web.Controllers
             {
                 return NotFound();
             }
+
             ViewData["Brands"] = await _context.Brands.ToListAsync();
+            var goodsPrice = await _context.GoodsPrices.SingleOrDefaultAsync(p => p.GoodsId == id && p.ShopId == 0);
+            ViewData["Price"] = goodsPrice.Price;
+            ViewData["Gid"] = goodsPrice.GoodsId;
 
             return View(goods);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,BrandId,GoodsImg,GoodsCode,GoodsName,GoodsSepc,GoodsUnit,AddTime")] Goods goods)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,BrandId,GoodsImg,GoodsCode,GoodsName,GoodsSepc,GoodsUnit,AddTime")] Goods goods, int gid, decimal price = 0)
         {
             if (id != goods.Id)
             {
@@ -110,8 +141,15 @@ namespace Cyc.Order.Web.Controllers
                 try
                 {
                     goods.LastUpdateTime = DateTime.Now;
-                    goods.IsDelete = true;
+                    goods.IsDelete = false;
                     _context.Update(goods);
+
+                    var goodsPrice = await _context.GoodsPrices.SingleOrDefaultAsync(g => g.GoodsId == gid && g.ShopId == 0);
+                    if (goodsPrice != null)
+                    {
+                        goodsPrice.Price = price;
+                    }
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -154,7 +192,7 @@ namespace Cyc.Order.Web.Controllers
                          .Trim('"');
 
             var ext = Path.GetExtension(filename);
-            var newName = Path.Combine("images", DateTime.Now.Ticks + ".jpg");
+            var newName = Path.Combine("images", DateTime.Now.Ticks + ext);
             var filePath = hostingEnv.WebRootPath + $@"\{newName}";
 
             using (FileStream fs = System.IO.File.Create(filePath))
