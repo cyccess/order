@@ -9,6 +9,7 @@
         <table class="table">
             <thead>
                 <tr>
+                    <th>图片</th>
                     <th>
                         商品名称
                     </th>
@@ -31,6 +32,9 @@
                 @foreach (var item in Model)
             {
                 <tr>
+                    <td>
+                        <img src="@item.GoodsImg" alt="Alternate Text" width="60" height="60"/>
+                    </td>
                     <td>
                         <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.GoodsName)</a>
                     </td>

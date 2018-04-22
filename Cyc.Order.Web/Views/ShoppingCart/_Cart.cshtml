@@ -4,6 +4,7 @@
     <thead>
         <tr>
             <th><input type="checkbox" id="chkAll" @(Model.CheckedAll?"checked":"")/>选择</th>
+            <th>图片</th>
             <th>
                 商品
             </th>
@@ -25,6 +26,9 @@
             <tr class="product_@item.Id">
                 <td>
                     <input type="checkbox" value="@item.Id" @(item.Checked?"checked":"")/>
+                </td>
+                <td>
+                    <img src="@item.GoodsImg" alt="Alternate Text" width="60" height="60"/>
                 </td>
                 <td>
                     <div class="c-name">

@@ -38,6 +38,7 @@
         <table class="table">
             <thead>
                 <tr>
+                    <th>图片</th>
                     <th>
                         商品名称
                     </th>
@@ -63,6 +64,9 @@
                 @foreach (var item in Model.Goods)
             {
                 <tr>
+                    <td>
+                        <img src="@item.GoodsImg" alt="Alternate Text" width="60" height="60" />
+                    </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.GoodsName)
                     </td>
