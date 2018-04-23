@@ -3,67 +3,48 @@
     ViewData["Title"] = "商品订购";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<style>
+    .content{background-color:#fff;}
+</style>
+        <ul class="searchlist-normal">
+            @foreach (var item in Model)
+    {
+        <li class="normal-list">
+            <div class="list-body">
+                <div class="pro-img">
+                    <img src="@item.GoodsImg" alt="" />
+                </div>
 
-<div class="card">
-    <div class="content">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>图片</th>
-                    <th>
-                        商品名称
-                    </th>
-                    <th>
-                        商品条码
-                    </th>
-                    <th>
-                        品牌
-                    </th>
-                    <th>
-                        规格
-                    </th>
-                    <th>
-                        单位
-                    </th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        <img src="@item.GoodsImg" alt="Alternate Text" width="60" height="60"/>
-                    </td>
-                    <td>
-                        <a asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.GoodsName)</a>
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.GoodsCode)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Brand.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.GoodsSepc)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.GoodsUnit)
-                    </td>
-                    <td>
-                        <a class="btn btn-primary btn-xs add-cart" data-id="@item.Id">加入购物车</a>
-                    </td>
-                </tr>
-        }
-            </tbody>
-        </table>
+                <div class="product-info-box">
+                    <div class="product-name">
+                        <span>@item.GoodsName</span>
+                    </div>
+           
+                    <div class="product-buy">
+                        <div class="product-price-m">
+                            <em>¥<span class="big-price">188.00</span></em>
+                        </div>
+                        
+
+                        <div class="product-btn add-cart" data-id="@item.Id">
+                            <i class="fa fa-shopping-cart"></i>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+           
+        </li>
+
+}
+        </ul>
+
         <div class="text-center">
             <ul class="pagination">
                 <pager generation-mode="ListOnly" />
             </ul>
         </div>
-    </div>
-</div>
+    
 @section Scripts{
     <script>
         $(function () {
