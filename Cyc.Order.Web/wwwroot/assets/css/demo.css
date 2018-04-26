@@ -145,52 +145,177 @@
 
 .cart-content{
     position:relative;
+    padding-bottom:52px;
 }
 
-.cart-content #chkAll {
-    vertical-align:text-bottom;
+.cart-list .item{
+    position:relative;
+    background-color:#fff;
+    overflow:hidden;
+}
+.item:not(:last-child):before {
+    content: "";
+    height: 0;
+    display: block;
+    border-bottom: 1px solid #ddd;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
-.cart-tbody {
-    font-family: "Microsoft YaHei",SimSun,verdana;
+.cart-list .item .goods {
+    min-height: 75px;
+    padding: 12px 10px 15px 128px;
+    -webkit-overflow-scrolling: touch;
 }
 
-.cart-tbody .cart-goods-num {
+    .cart-list .item .checkbox {
+        z-index: 1;
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 42px;
+        height: 100%;
+    }
+
+     .item .checkbox .fa-check-square-o:before {
+        position: absolute;
+        top: 30px;
+    }
+
+.item .checkbox .fa-square-o:before {
+    position: absolute;
+    top: 30px;
+}
+
+.cart-list .item .image {
+    position: absolute;
+    left: 43px;
+    top: 12px;
+    display: block;
+    width: 75px;
+    height: 75px;
+}
+
+    .cart-list .goods .content {
+        min-height:75px;
+    }
+
+
+    .cart-list .goods .name {
+       
+       margin-bottom:5px;
+    }
+
+    .goods .name a {
+        font-size: 14px;
+        font-weight: 700;
+        color: #333;
+    }
+
+.goods .sku {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    position: relative;
+    background-color: #fff;
+    font-size: 14px;
+    color: #666;
+    margin: 8px 0 10px;
+    padding: 5px 25px 4px 5px;
+    border: 1px solid #e5e5e5;
+    border-radius: 2px
+}
+
+    .goods .sku:after {
+        content: "";
+        display: inline-block;
+        vertical-align: middle;
+        margin-top: -2px;
+        width: 6px;
+        height: 10px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 12 20%22%3E%3Cpath fill=%22#CCCCCC%22 fill-rule=%22evenodd%22 d=%22M2 20c-.8 0-1.5-.5-1.8-1.2-.3-.8-.2-1.6.4-2.2L7.2 10 .6 3.4c-.8-.8-.8-2 0-2.8.8-.8 2-.8 2.8 0l8 8c.4.4.6 1 .6 1.4 0 .5-.2 1-.6 1.4l-8 8c-.4.4-1 .6-1.4.6z%22/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-size: 100%;
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+        position: absolute;
+        top: 50%;
+        right: 6px;
+        margin-top: -5px
+    }
+
+    .goods .sku.disabled {
+        padding: 0;
+        border: none;
+        margin: 0
+    }
+
+        .goods .sku.disabled:after {
+            display: none
+        }
+
+.goods .goods_line {
+    position: relative;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    margin: 5px 0 2px;
+}
+.goods .goods_line .price {
+    -webkit-box-flex: 1;
+    -webkit-flex: 1;
+    flex: 1;
+    line-height: 16px;
+    color: #e4393c;
+    font-size: 16px;
+    font-family:Arial;
+  
+}
+.num_wrap {
+    position: relative;
+    display: block;
+    width: 90px;
+    border-radius: 4px;
+    overflow: hidden;
+    background-color: #f7f7f7;
+}
+
+    .num_wrap a{
+        color:#555;
+    }
+
+
+
+.num_wrap .num {
     width: 45px;
     height: 22px;
     line-height: 22px;
     text-align: center;
+    border:1px solid #ddd;
 }
-.cart-tbody .c-quantity{
-    width:90px;
+.goods .goods_sub_line {
+    position: relative;
+    margin-top: 10px;
 }
 
-
-.cart-tbody .c-name {
-    float: left;
-    width: 200px;
-    color: #333;
-    overflow: hidden;
-}
-.cart-tbody .c-name a{
-    color: #333;
-}
-.cart-tbody .c-sum {
-    width: 100px;
-    padding-right: 40px;
+.goods .m_action {
+    margin-right: -10px;
+    color: #999;
+    font-family: Helvetica;
     text-align: right;
-    font-family: verdana;
-}
-.cart-tbody .c-sum strong {
-    color: #333;
-    font-weight: 700;
-    display: block;
+    padding-right:10px;
+
 }
 
-.cart-tbody .c-props{
-    float:left;
-    color:#666;
-}
+    .goods .m_action a{
+        color:#999;
+    }
 
 
 .cart-toolbar {
@@ -344,7 +469,7 @@
 
 .searchlist-normal .normal-list .list-body .product-info-box .product-name {
     color: #232326;
-    font-size: 15px;
+    font-size: 14px;
     line-height: 20px;
     height: 40px;
     overflow: hidden;

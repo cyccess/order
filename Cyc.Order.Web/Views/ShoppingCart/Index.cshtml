@@ -10,33 +10,44 @@
 @section Scripts{
 <script>
     $(function () {
+
+        var setCart = function (data) {
+            $(".cart-content").html(data);
+            $('[data-toggle="checkbox"]').each(function () {
+                var $checkbox = $(this);
+                $checkbox.checkbox();
+            });
+        }
+
+
         $(".cart-content").on("change", "#chkAll", function () {
             var isChecked = $(this).prop('checked');
             $(".cart-tbody input[type='checkbox']").prop("checked", isChecked);
             $.get("/shoppingcart/CartGoodsSelected", { id: 0, checkedAll: isChecked }, function (data) {
-                $(".cart-content").html(data);
+                setCart(data);
             });
         });
 
-        $(".cart-content").on("change", ".cart-tbody input[type='checkbox']", function () {
+        $(".cart-content").on("change", ".goods input[type='checkbox']", function () {
             var id = $(this).val();
             $.get("/shoppingcart/CartGoodsSelected", { id: Number(id) }, function (data) {
                 $(".cart-content").html(data);
+                setCart(data);
             });
         });
 
         $(".cart-content").on("click", ".plus", function () {
-            var $num = $(this).prev(".cart-goods-num");
+            var $num = $(this).prev(".num");
             var num = parseInt($num.val());
             $num.val(num + 1);
             var id = $(this).data("id");
             $.get("/shoppingcart/quantity", { id: id, type: 'plus' }, function (data) {
-                $(".cart-content").html(data);
+                setCart(data);
             });
         });
 
         $(".cart-content").on("click", ".minus", function () {
-            var $num = $(this).next(".cart-goods-num");
+            var $num = $(this).next(".num");
             var num = parseInt($num.val());
             if (num === 1) {
                 return false;
@@ -44,11 +55,11 @@
             $num.val(num - 1);
             var id = $(this).data("id");
             $.get("/shoppingcart/quantity", { id: id, type: 'minus' }, function (data) {
-                $(".cart-content").html(data);
+                setCart(data);
             });
         });
 
-        $(".cart-content").on('input propertychange', '.cart-goods-num', function () {
+        $(".cart-content").on('input propertychange', '.num', function () {
             var $that = $(this);
             var val = $that.val();
             if (isNaN(val)) {
@@ -57,7 +68,7 @@
             }
             var id = $that.data("id");
             $.get("/shoppingcart/quantity", { id: id, type: '', num: val }, function (data) {
-                $(".cart-content").html(data);
+                setCart(data);
             });
         });
 
@@ -85,7 +96,7 @@
         });
 
         $(".cart-content").on("click", ".btn-submit", function () {
-            var cartGoodsChecked = $(".cart-tbody input[type='checkbox']:checked");
+            var cartGoodsChecked = $(".goods input[type='checkbox']:checked");
             if (cartGoodsChecked.length === 0) {
                 $.notify({
                         message: "请至少选择一件商品哦~",
