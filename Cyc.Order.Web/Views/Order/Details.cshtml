@@ -1,94 +1,210 @@
 ﻿@model OrderDetailViewModel
 @{
     ViewData["Title"] = "订单详情";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_MyLayout.cshtml";
+}
+<style>
+    .order-state {
+        padding: .4rem 0 0 .4rem;
+        background-color: #fff;
+        overflow: hidden;
+        position: relative;
+        font-size: .37333rem;
+        line-height: 1;
+    }
+    .state-top {
+        line-height: 1;
+        margin-bottom: .18667rem;
+        color: #666;
+    }
+    .state-txt span {
+        font-size: .37333rem;
+        color: #b4282d;
+    }
+
+
+.order-info-item{
+    line-height:24px;
 }
 
-<div class="card">
-    <div class="content">
-        <div class="row">
-            <div class="col-md-4 order-state">
-                <div class="state-top">
-                    <span>订单号：@Model.OrderRecord.Id</span>
-                    <br />
-                    <span class="text-muted">下单时间：2018-04-01 12:00</span>
-                </div>
+.goods-total{
+    text-align:right;
+}
+.goods-total .count {
+    font-family:Verdana;
+    font-size: 18px;
+    font-weight: 700;
+}
 
-                <div class="state-txt">
-                    @await Html.PartialAsync("_OrderStatus", (OrderStatus)Model.OrderRecord.Status)
-                </div>
+    .m-orderInfo {
+        overflow: hidden;
+        border-top: 1px solid rgba(0,0,0,.2);
+        height: 1.32rem;
+    }
+        .m-orderInfo .cost {
+            font-size: .37333rem;
+            display: inline-block;
+            height: 1.32rem;
+            line-height: 1.32rem;
+        }
+    .btnGroup {
+        float: right;
+        margin-top: .21333rem ;
+        margin-right: .4rem;
+    }
 
-                @if (Model.OrderRecord.Status == (int)OrderStatus.Undelivered)
-                {
-                    <div class="state-btn">
-                        <a class="btn btn-default order-cancel " href="#" data-id="@Model.OrderRecord.Id">取消订单</a>
-                    </div>
-                }
-            </div>
-            <div class="col-md-8 order-info">
-                <h4>收货人信息</h4>
-                <div class="row order-info-item">
-                    <span class="col-md-2">收货人：</span>
-                    <div class="col-md-10">@Model.OrderRecord.Consignee</div>
-                </div>
+        .m-orderInfo .btn-cancel {
+            float:right;
+            height: .85333rem;
+            line-height: .85333rem;
+            font-size: .37333rem
+        }
+        
+.f-colorRed{
+    color: #b4282d
+}
+    .m-package {
+        background-color: #fff;
+        margin-top: .26667rem;
+    }
 
-                <div class="row order-info-item">
-                    <span class="col-md-2">地址：</span>
-                    <div class="col-md-10">@Model.OrderRecord.Address</div>
-                </div>
+    .m-package .packageInfo{
+        height: 1.2rem;
+        line-height: 1.2rem;
+        margin-left: .4rem;
+        border-bottom: 1px solid rgba(0,0,0,.15);
+    }
 
-                <div class="row order-info-item">
-                    <span class="col-md-2">手机号码：</span>
-                    <div class="col-md-10">@Model.OrderRecord.MobilePhone</div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="card">
-    <div class="content">
-        <div class="">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>图片</th>
-                        <th>商品</th>
-                        <th>单价</th>
-                        <th>商品数量</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.OrderRecordDetails)
-                {
-                    <tr>
-                        <td><img src="@item.Img" alt="Alternate Text" width="60" height="60" /></td>
-                        <td><a asp-controller="Sell" asp-action="Details" asp-route-id="@item.GoodsId">@item.Name</a></td>
-                        <td>@item.Price</td>
-                        <td>
-                            <div class="text-muted">
-                                <span>x</span>
-                                <span>@item.Num</span>
-                            </div>
-                        </td>
-                    </tr>
+    .m-package .packageName {
+        font-size: .37333rem;
+    }
+
+    .m-package .packageStatus {
+        margin-right: .4rem;
+        font-size: .37333rem;
+        color: #b4282d
+    }
+
+    .m-list {
+        display: block;
+        padding-left: .4rem;
+        background-color: #fff
+    }
+
+        .m-list > .item {
+            position: relative
+        }
+
+    .m-listItem {
+        display:flex;
+        position: relative;
+        min-height: 1.38667rem;
+        padding-right: 1.06667rem;
+        overflow:hidden;
+    }
+
+        .m-listItem .m-img {
+            position: relative;
+            float: left;
+            margin-right: .26667rem;
+            overflow: hidden;
+            border-radius: 4px;
+            background-color: #f4f4f4;
+        }
+            .m-listItem .m-img img {
+                width: 1.86667rem;
+                height: 1.86667rem;
+                display: block;
             }
-                </tbody>
-            </table>
+
+    .m-detail {
+        flex: 1;
+        line-height: .45333rem;
+        font-size: .37333rem;
+        margin-bottom: .09333rem;
+        overflow: hidden;
+    }
+        .m-detail .name {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            float: left;
+            max-width: 16em;
+         
+        }
+
+</style>
+
+<div class="m-orderDetail">
+    <div class="order-state">
+        <div class="state-top">
+            <p>下单时间：2018-04-01 12:00</p>
+            <p>订单编号：@Model.OrderRecord.Id</p>
         </div>
-        <hr />
+
+        <div class="m-orderInfo">
+            <span class="cost">
+                <span>应付：</span>
+                <span class="f-colorRed">￥@Model.OrderRecord.TotalAmount</span>
+            </span>
+
+            @if (Model.OrderRecord.Status == (int)OrderStatus.Undelivered)
+            {
+                <div class="btnGroup">
+                    <a class="btn-cancel" href="#" data-id="@Model.OrderRecord.Id">取消订单</a>
+                </div>
+            }
+        </div>
+
+    </div>
+
+
+    <div class="m-package">
+        <div class="packageInfo">
+            <span class="packageName">
+                商品列表
+            </span>
+            <div class="packageStatus pull-right">
+                @await Html.PartialAsync("_OrderStatus", (OrderStatus)Model.OrderRecord.Status)
+            </div>
+        </div>
+
+        <ul class="m-list">
+            <li class="item">
+                <div class="m-listItem">
+                    <div class="m-img">
+                        <img src="http://localhost:55178/images/636581121022115086.jpg" alt="" />
+                    </div>
+                    <div class="m-detail">
+                        <div class="name">
+                            <span>网易智造智能插线板（新国标）</span>
+                        </div>
+
+                        <div>
+                            <span>￥200.00</span>
+                        </div>
+                    </div>
+                </div>
+               
+            </li>
+        </ul>
+    </div>
+
+  
+</div>
+
+
+    
         <div class="text-danger goods-total">
             <span>应付总额：</span>
             <span class="count">￥@Model.OrderRecord.TotalAmount</span>
         </div>
-    </div>
-</div>
-<div>
-    <a asp-action="Index">返回订单列表</a>
-</div>
+
+
 @section Scripts{
     <script>
         $(function () {
-            $(".order-cancel").on("click", function () {
+            $(".btn-cancel").on("click", function () {
                 var id = $(this).data("id");
                 swal({
                     title: '确定取消此订单吗？',
