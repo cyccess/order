@@ -160,7 +160,7 @@ namespace Cyc.Order.Web.Controllers
 
             var now = DateTime.Now;
 
-            OrderRecord order = new OrderRecord();
+            Data.DataModel.OrderRecord order = new Data.DataModel.OrderRecord();
             order.ShopId = 1;
             order.Status = 0;
             order.Num = carts.Sum(c => c.Num);

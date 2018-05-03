@@ -20,8 +20,4 @@
     <ProjectReference Include="..\Cyc.Order.Data\Cyc.Order.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\images\" />
-  </ItemGroup>
-
 </Project>

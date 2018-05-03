@@ -9,7 +9,10 @@ namespace Cyc.Order.Web.Models
 {
     public class OrderRecordViewModel
     {
-        public IPagedList<OrderRecord> OrderRecords;
+        public IList<OrderRows> OrderRows;
+
+
+        public IPagedList<Data.DataModel.OrderRecord> OrderRecords;
 
         public string consignee { get; set; }
 

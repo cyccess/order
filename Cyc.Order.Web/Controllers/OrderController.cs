@@ -19,20 +19,11 @@ namespace Cyc.Order.Web.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index(string consignee, string mobilePhone, int status = 0, int page = 1)
+        public async Task<IActionResult> Index(int status = 0, int page = 1)
         {
             int[] s = { 1, 10, 99 };
-            var query = _context.OrderRecords.Where(o => o.ShopId == 1 && s.Contains(o.Status));
-
-            if (!string.IsNullOrEmpty(consignee))
-            {
-                query = query.Where(o => o.Consignee == consignee);
-            }
-
-            if (!string.IsNullOrEmpty(mobilePhone))
-            {
-                query = query.Where(o => o.MobilePhone == mobilePhone);
-            }
+            var query = _context.OrderRecords
+                .Where(o => o.ShopId == 1 && s.Contains(o.Status));
 
             if (status != 0)
             {
@@ -41,13 +32,25 @@ namespace Cyc.Order.Web.Controllers
 
             query = query.OrderByDescending(o => o.OrderDate);
 
-            var model = new OrderRecordViewModel();
-            model.consignee = consignee;
-            model.mobilePhone = mobilePhone;
-            model.status = status;
-            model.OrderRecords = await query.ToPagedListAsync(20, page);
+            var orderList = await query.Skip((page - 1) * 5).Take(5).ToListAsync();
 
-            return View(model);
+            var orderIds = orderList.Select(o => o.Id).ToArray();
+
+            var orderDetailList = await _context.OrderRecordDetails
+                .Where(o => orderIds.Contains(o.OrderId))
+                .ToListAsync();
+
+            List<OrderRows> list = new List<OrderRows>();
+
+            foreach (var item in orderList)
+            {
+                var row = new OrderRows();
+                row.OrderRecord = item;
+                row.OrderRecordDetailList = orderDetailList.Where(o => o.OrderId == item.Id).ToList();
+                list.Add(row);
+            }
+
+            return View(list);
         }
 
         // GET: Order/Details/5

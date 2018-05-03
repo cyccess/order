@@ -1,48 +1,43 @@
-﻿@model Sakura.AspNetCore.IPagedList<Goods>
+﻿@model Sakura.AspNetCore.IPagedList<Goods> 
 @{
     ViewData["Title"] = "商品订购";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_MyLayout.cshtml";
 }
-<style>
-    .content{background-color:#fff;}
-</style>
-        <ul class="searchlist-normal">
-            @foreach (var item in Model)
+
+<div class="sell-goods-list">
+    <ul class="searchlist-normal">
+        @foreach (var item in Model)
     {
-        <li class="normal-list">
-            <div class="list-body">
-                <div class="pro-img">
-                    <img src="@item.GoodsImg" alt="" />
-                </div>
-
-                <div class="product-info-box">
-                    <div class="product-name">
-                        <span>@item.GoodsName</span>
-                     
+            <li class="normal-list">
+                <div class="list-body">
+                    <div class="pro-img">
+                        <img src="@item.GoodsImg" alt="" />
                     </div>
 
-                    <div class="product-buy">
-                        <div class="product-price-m">
-                            <em>¥<span class="big-price">188.00</span></em>
+                    <div class="product-info-box">
+                        <div class="product-name">
+                            <span>@item.GoodsName</span>
+
                         </div>
 
-                        <div class="product-btn add-cart" data-id="@item.Id">
-                            <i class="fa fa-shopping-cart"></i>
-                        </div>
+                        <div class="product-buy">
+                            <div class="product-price-m">
+                                <em>¥<span class="big-price">188.00</span></em>
+                            </div>
 
+                            <div class="product-btn add-cart" data-id="@item.Id">
+                                <i class="fa fa-shopping-cart"></i>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
-            </div>
-        </li>
+            </li>
 
 }
-</ul>
+    </ul>
 
-        <div class="text-center">
-            <ul class="pagination">
-                <pager generation-mode="ListOnly" />
-            </ul>
-        </div>
+</div>
     
 @section Scripts{
     <script>
