@@ -11,6 +11,6 @@ namespace Cyc.Order.Web.Models
 
         public string Message { get; set; }
 
-        public string Data { get; set; }
+        public object Data { get; set; }
     }
 }

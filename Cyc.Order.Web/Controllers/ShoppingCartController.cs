@@ -21,37 +21,29 @@ namespace Cyc.Order.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            ShoppingCartViewModel model = await Cart();
-            return View(model);
+            ShoppingCartViewModel shoppingCart = await Cart();
+            var resultModel = new ResultModel();
+            resultModel.Code = 100;
+            resultModel.Data = shoppingCart;
+            return Json(resultModel);
         }
 
         // 更新购物车数量
-        [HttpGet]
-        public async Task<IActionResult> Quantity(int id, string type, int num = 0)
+        [HttpPost]
+        public async Task<IActionResult> Quantity(int id, int num = 1)
         {
             var entity = await _context.Carts.FindAsync(id);
             entity.UpdateTime = DateTime.Now;
             entity.Checked = true;
+            entity.Num = num;
 
-            if (type == "plus")
-            {
-                entity.Num += 1;
-            }
-            else if (type == "minus")
-            {
-                entity.Num -= 1;
-            }
-            else
-            {
-                entity.Num = num;
-            }
             await _context.SaveChangesAsync();
-            ShoppingCartViewModel model = await Cart();
-            return PartialView("_Cart", model);
+
+            return Json(new ResultModel { Code = 100, Message = "更新数量" });
         }
 
         // 选择购物车商品
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> CartGoodsSelected(int id, bool checkedAll = false)
         {
             if (id > 0)
@@ -70,12 +62,11 @@ namespace Cyc.Order.Web.Controllers
 
             await _context.SaveChangesAsync();
 
-            ShoppingCartViewModel model = await Cart();
-            return PartialView("_Cart", model);
+            return Json(new ResultModel { Code = 100, Message = "选择商品" });
         }
 
         // 删除商品
-        [HttpPost]
+
         public async Task<IActionResult> Remove(int id)
         {
             var entity = await _context.Carts.FindAsync(id);
@@ -160,7 +151,7 @@ namespace Cyc.Order.Web.Controllers
 
             var now = DateTime.Now;
 
-            Data.DataModel.OrderRecord order = new Data.DataModel.OrderRecord();
+            OrderRecord order = new OrderRecord();
             order.ShopId = 1;
             order.Status = 0;
             order.Num = carts.Sum(c => c.Num);
@@ -191,7 +182,7 @@ namespace Cyc.Order.Web.Controllers
 
             var result = new ResultModel();
             result.Code = 100;
-            result.Message = "/order/orderConfirm?oid=" + order.Id;
+            result.Data = new { oid = order.Id };
             return Json(result);
         }
 

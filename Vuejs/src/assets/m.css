@@ -1,0 +1,32 @@
+﻿html,body{
+  height: 100%;
+}
+
+body {
+  position: relative;
+  margin: 0;
+}
+
+#app{
+  height: 100%;
+}
+
+li{list-style: none;}
+
+.w-button{
+  display: inline-block;
+  vertical-align: middle;
+  width: 3.36rem;
+  text-align: center;
+  line-height: .90667rem;
+  font-size: .87333rem;
+  color: #fff;
+  border: 1px solid #b4282d;
+  background-color: #b4282d;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+
+
+

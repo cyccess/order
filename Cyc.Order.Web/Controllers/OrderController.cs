@@ -32,7 +32,7 @@ namespace Cyc.Order.Web.Controllers
 
             query = query.OrderByDescending(o => o.OrderDate);
 
-            var orderList = await query.Skip((page - 1) * 5).Take(5).ToListAsync();
+            var orderList = await query.Skip((page - 1) * 10).Take(10).ToListAsync();
 
             var orderIds = orderList.Select(o => o.Id).ToArray();
 
@@ -50,10 +50,17 @@ namespace Cyc.Order.Web.Controllers
                 list.Add(row);
             }
 
-            return View(list);
+            var res = new ResultModel()
+            {
+                Code = 100,
+                Data = list
+            };
+
+            return Json(res);
         }
 
         // GET: Order/Details/5
+  
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -74,8 +81,12 @@ namespace Cyc.Order.Web.Controllers
             var model = new OrderDetailViewModel();
             model.OrderRecord = orderRecord;
             model.OrderRecordDetails = orderRecordDetails;
-
-            return View(model);
+            var res = new ResultModel()
+            {
+                Code = 100,
+                Data = model
+            };
+            return Json(res);
         }
 
         [HttpPost, ActionName("CancelOrder")]
@@ -85,11 +96,12 @@ namespace Cyc.Order.Web.Controllers
                 .SingleOrDefaultAsync(m => m.Id == id && m.ShopId == 1);
             orderRecord.Status = (int)OrderStatus.Cancel;
             await _context.SaveChangesAsync();
-            return Json(new { message = "订单取消成功！" });
+            return Json(new { code=100, message = "订单取消成功！" });
         }
 
 
         //确认订单
+        [HttpPost]
         public async Task<IActionResult> OrderConfirm(int oid)
         {
             var orderRecord = await _context.OrderRecords
@@ -106,7 +118,7 @@ namespace Cyc.Order.Web.Controllers
                 Shop = shop
             };
 
-            return View(model);
+            return Json(model);
         }
 
         //提交订单
@@ -143,7 +155,7 @@ namespace Cyc.Order.Web.Controllers
             {
                 Message = "提交订单成功",
                 Code = 100,
-                Data = "/Order/SubmitOrderSuccess?orderId=" + oid
+                Data = oid
             };
             return Json(result);
         }
@@ -154,8 +166,6 @@ namespace Cyc.Order.Web.Controllers
             ViewData["OrderId"] = orderId;
             return View();
         }
-
-
 
     }
 }

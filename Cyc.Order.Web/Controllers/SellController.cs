@@ -26,7 +26,16 @@ namespace Cyc.Order.Web.Controllers
         {
             var list = await _context.Goods.Include("Brand").Where(g => !g.IsDelete)
                 .ToPagedListAsync(20, page);
-            return View(list);
+
+            var model = new ResultModel();
+
+            model.Code = 100;
+            model.Data = list;
+
+            if (list.Count == 0)
+                model.Code = 0;
+
+            return Json(model);
         }
 
         public async Task<IActionResult> Details(int? id)
