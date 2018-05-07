@@ -94,7 +94,6 @@ namespace Cyc.Order.Web.Controllers
             return Json(res);
         }
 
-
         // GET: OrderRecords
         [Route("/Order/List")]
         public async Task<IActionResult> Index(string consignee, string mobilePhone, int status = 0, int page = 1)
