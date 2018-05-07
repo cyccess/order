@@ -1,3 +1,4 @@
+import Login from '@/components/Login'
 import MyOrder from '@/components/MyOrder'
 import OrderDetail from '@/components/OrderDetails'
 import Home from '@/components/Home'
@@ -9,6 +10,13 @@ import SubmitOrderSuccess from '@/components/SubmitOrderSuccess'
 
 
 export default [
+
+  {
+    path: '/login',
+    name: 'login',
+    component: Login,
+    meta: {title: '用户登录'}
+  },
   {
     path: '/',
     name: 'home',
