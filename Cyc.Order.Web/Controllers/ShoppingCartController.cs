@@ -120,7 +120,7 @@ namespace Cyc.Order.Web.Controllers
             await _context.SaveChangesAsync();
 
             model.Code = 100;
-            model.Message = "已加入购物车！";
+            model.Message = "加入购物车成功";
             return Json(model);
         }
 

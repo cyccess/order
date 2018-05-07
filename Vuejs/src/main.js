@@ -5,18 +5,18 @@ import App from './App'
 import Router from 'vue-router'
 import routes from './router'
 import FastClick from 'fastclick'
-import {AjaxPlugin} from 'vux'
 import VueScroller from 'vue-scroller'
 import qs from 'qs';
-import { ConfirmPlugin} from 'vux'
+import {AjaxPlugin, ConfirmPlugin, ToastPlugin} from 'vux'
+
+import './assets/fonts/iconfont.css'
+import './assets/m.css'
 
 Vue.use(Router);
 Vue.use(AjaxPlugin);
 Vue.use(VueScroller);
 Vue.use(ConfirmPlugin);
-
-import './assets/fonts/iconfont.css'
-import './assets/m.css'
+Vue.use(ToastPlugin);
 
 Vue.config.productionTip = false
 
@@ -26,10 +26,10 @@ FastClick.attach(document.body);
 AjaxPlugin.$http.interceptors.request.use((request) => {
   // 发送请求之前做一些处理
   // console.log(request)
-  if(request.data){
+  if (request.data) {
     let contentType = request.headers["Content-Type"]
     // contentType参数不是application/json，转换参数格式
-    if(!(contentType && contentType.indexOf("application/json")>-1))
+    if (!(contentType && contentType.indexOf("application/json") > -1))
       request.data = qs.stringify(request.data);
   }
   return request;
@@ -87,7 +87,7 @@ Vue.filter('money', function (value) {
 });
 
 
-Vue.filter("orderState",function (value) {
+Vue.filter("orderState", function (value) {
   value = parseInt(value);
   if (value === 1)
     return "待发货";

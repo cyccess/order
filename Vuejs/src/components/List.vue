@@ -2,23 +2,23 @@
   <div class="sell-goods-list">
     <scroller :on-refresh="refresh" :on-infinite="infinite" ref="myscroller" :no-data-text="noData">
       <ul class="searchlist-normal">
-        <li v-for="(item,index) in list" :key="index" class="normal-list">
+        <li @click="onDetailClick(item.goods.id)" v-for="(item,index) in list" :key="index" class="normal-list">
           <div class="list-body">
             <div class="pro-img">
-              <img :src="item.goodsImg" alt=""/>
+              <img :src="item.goods.goodsImg" alt=""/>
             </div>
 
             <div class="product-info-box">
               <div class="product-name">
-                <span>{{item.goodsName}}</span>
+                <span>{{item.goods.goodsName}}</span>
               </div>
 
               <div class="product-buy">
                 <div class="product-price-m">
-                  <em>¥<span class="big-price">188.00</span></em>
+                  <em>¥<span class="big-price">{{item.goodsPrice.price|money}}</span></em>
                 </div>
 
-                <div class="product-btn add-cart">
+                <div @click.stop="addToCart(item.goods.id)" class="product-btn add-cart">
                   <i class="icon icon-gouwuche"></i>
                 </div>
 
@@ -28,17 +28,22 @@
         </li>
       </ul>
     </scroller>
+
+    <toolbar :selected="1"></toolbar>
   </div>
 </template>
 
 <script>
-
+  import Toolbar from '@/components/Toolbar.vue'
   export default {
+    components: {
+      Toolbar,
+    },
     data() {
       return {
         list: [],
         page: 0,
-        noData:''
+        noData: ''
       }
     },
     created() {
@@ -73,6 +78,17 @@
           }
         }
         done();
+      },
+      async addToCart(goodsId) {
+        let res = await this.$http.post('/api/shoppingCart/AddCart', {goodsId: goodsId});
+        if (res.code === 100) {
+          this.$vux.toast.show({
+            text: res.message
+          });
+        }
+      },
+      onDetailClick(id){
+        this.$router.push({path:"/detail",query:{id:id}});
       }
     }
   }
@@ -80,8 +96,7 @@
 
 <style scoped>
   .sell-goods-list {
-    height: 100%;
-    background-color:#fff;
+
   }
 
   .searchlist-normal {
@@ -90,12 +105,12 @@
 
   .normal-list {
     font-size: .87333rem;
+    background-color: #fff;
   }
 
   .searchlist-normal .normal-list .list-body {
     display: -webkit-box;
-    height: 100%;
-    margin-bottom:15px;
+    padding-bottom: 1rem;
   }
 
   .searchlist-normal .normal-list .list-body .pro-img {
@@ -105,11 +120,13 @@
     overflow: hidden;
     text-align: center;
   }
+
   .searchlist-normal .normal-list .list-body img {
     display: inline-block;
     width: 100%;
     height: 100%;
   }
+
   .searchlist-normal .normal-list .list-body .product-info-box {
     -webkit-box-flex: 1;
     box-flex: 1;
@@ -165,7 +182,6 @@
     line-height: 29px
   }
 
-
   .searchlist-normal .normal-list .list-body .product-info-box .product-price-m {
     -webkit-box-flex: 1;
     box-flex: 1;
@@ -187,7 +203,7 @@
   }
 
   .searchlist-normal .normal-list .list-body .product-info-box .product-price-m .big-price {
-    font-size:.875rem;
+    font-size: .875rem;
   }
 
   .product-buy {
@@ -195,6 +211,7 @@
     height: 100%;
     font-size: 0px;
   }
+
   .product-buy .icon-gouwuche {
     font-size: 40px;
     line-height: 40px;

@@ -37,6 +37,11 @@
             </div>
           </div>
         </div>
+        <div class="m-btnGroup vux-1px-t" v-if="item.orderRecord.status===1">
+          <div class="m-btnInner">
+            <button @click.stop.prevent="confirmedDeliver(index)" class="btn w-button"><i class="icon icon-clock"></i> 确认发货</button>
+          </div>
+        </div>
       </div>
     </scroller>
     <toolbar :selected="3"></toolbar>
@@ -74,7 +79,7 @@
         }
 
         this.page += 1;
-        let res = await this.$http.post('/api/Order', {page: this.page});
+        let res = await this.$http.post('/api/Order/MyList', {page: this.page});
 
         if (res.code === 100) {
           if (res.data.length < 10) {
@@ -100,15 +105,35 @@
           onCancel() {
           },
           async onConfirm() {
-            let res = await _this.$http.post('/api/Order/CancelOrder', {id: order.id});
+            let res = await _this.$http.post('/api/Trade/CancelOrder', {id: order.id});
             if (res.code === 100) {
               order.status = 99;//订单取消
             }
           }
         })
       },
+      async confirmedDeliver(index) {
+        let order = this.list[index].orderRecord;
+        const _this = this;
+        this.$vux.confirm.show({
+          content: '是否已发货?',
+          confirmText: "是",
+          cancelText: "否",
+          onCancel() {
+          },
+          async onConfirm() {
+            let res = await _this.$http.post('/api/Trade/Delivery', {id: order.id});
+            if (res.code === 100) {
+              order.status = 10;//订单已发货
+              _this.$vux.toast.show({
+                text: res.message
+              });
+            }
+          }
+        })
+      },
       go(oid) {
-        this.$router.push({path: "/orderDetail", query: {oid: oid}});
+        this.$router.push({path: "/order/detail", query: {oid: oid}});
       }
     }
   }
@@ -195,5 +220,19 @@
   .m-orderItem .packageStatus {
     color: #b4282d
   }
+  .m-btnGroup{
+    position: relative;
+    overflow: hidden;
+    padding-bottom: .5rem;
+  }
+  .m-btnInner{
+    float: right;
+    margin-top: .5rem;
+    margin-right: .875rem;
+  }
 
+  .m-btnGroup .btn{
+    width: 5.666rem;
+    line-height: 2rem;
+  }
 </style>

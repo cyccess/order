@@ -15,7 +15,7 @@
 
               <div class="info">
                 <div class="name">
-                  <router-link to="detail">
+                  <router-link :to="{path:'/detail',query:{id:item.goodsId}}">
                     {{item.goodsName}}
                   </router-link>
                   <a></a>
@@ -56,15 +56,17 @@
       </div>
     </div>
 
+    <toolbar :selected="2"></toolbar>
   </div>
 </template>
 
 <script>
   import {CheckIcon, XNumber, Swipeout, SwipeoutItem, SwipeoutButton} from 'vux'
+  import Toolbar from '@/components/Toolbar.vue'
 
   export default {
     components: {
-      CheckIcon, XNumber, Swipeout, SwipeoutItem, SwipeoutButton
+      CheckIcon, XNumber, Swipeout, SwipeoutItem, SwipeoutButton,Toolbar
     },
     computed: {
       totalCount:function () {

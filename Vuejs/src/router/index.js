@@ -7,6 +7,7 @@ import ShoppingCart from '@/components/ShoppingCart'
 import OrderConfirm from '@/components/OrderConfirm'
 import SubmitOrderSuccess from '@/components/SubmitOrderSuccess'
 
+
 export default [
   {
     path: '/',
@@ -55,6 +56,22 @@ export default [
     name: 'orderDetail',
     component: OrderDetail,
     meta: {title: '订单详情'}
+  },
+  {
+    path: '/order',
+    name: 'order',
+    component: resolve => require(['@/components/trade/Index.vue'], resolve),
+    children: [
+      {
+        path: 'list',
+        component: resolve => require(['@/components/trade/List.vue'], resolve),
+        meta: {title: '订单列表'}
+      },
+      {
+        path: 'detail',
+        component: resolve => require(['@/components/trade/Detail.vue'], resolve),
+        meta: {title: '订单详情'}
+      }
+    ]
   }
 ]
-

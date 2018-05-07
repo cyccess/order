@@ -34,7 +34,8 @@
         </span>
 
           <div v-if="data.orderRecord.status===1" class="btnGroup">
-            <a @click="cancelOrder(data.orderRecord.id)" class="btn-cancel" href="javascript:;">取消订单</a>
+            <button @click="confirmedDeliver" class="btn w-button"><i class="icon icon-clock"></i> 确认发货</button>
+            <a @click="cancelOrder" class="btn-cancel" href="javascript:;">取消订单</a>
           </div>
         </div>
       </div>
@@ -98,7 +99,7 @@
     },
     methods: {
       async getData() {
-        let res = await this.$http.post('/api/Order/Details', {id: this.oid});
+        let res = await this.$http.post('/api/Order/Detail', {orderId: this.oid});
         this.data = res.data;
       },
       async cancelOrder() {
@@ -110,9 +111,28 @@
           onCancel() {
           },
           async onConfirm() {
-            let res = await _this.$http.post('/api/Order/CancelOrder', {id: _this.oid});
+            let res = await _this.$http.post('/api/Trade/CancelOrder', {id: _this.oid});
             if (res.code === 100) {
               _this.data.orderRecord.status = 99;//订单取消
+            }
+          }
+        })
+      },
+      async confirmedDeliver() {
+        const _this = this;
+        this.$vux.confirm.show({
+          content: '是否已发货?',
+          confirmText: "是",
+          cancelText: "否",
+          onCancel() {
+          },
+          async onConfirm() {
+            let res = await _this.$http.post('/api/Trade/Delivery', {id: _this.oid});
+            if (res.code === 100) {
+              _this.data.orderRecord.status = 10;//订单已发货
+              _this.$vux.toast.show({
+                text: res.message
+              });
             }
           }
         })
@@ -181,14 +201,14 @@
 
   .m-orderInfo {
     overflow: hidden;
-    height: 2.32rem;
+    height: 3rem;
   }
 
   .m-orderInfo .cost {
     font-size: .87333rem;
     display: inline-block;
-    height: 2.32rem;
-    line-height: 2.32rem;
+    height: 3rem;
+    line-height: 3rem;
   }
 
   .btnGroup {
@@ -199,10 +219,11 @@
 
   .m-orderInfo .btn-cancel {
     float: right;
-    height: 1.85333rem;
-    line-height: 1.85333rem;
+    height: 2.2rem;
+    line-height: 2.2rem;
     font-size: .87333rem;
     color: #333;
+    margin-right: .875rem;
   }
 
   .f-colorRed {
@@ -285,6 +306,12 @@
 
   .m-detail .line .count {
     float: right;
+  }
+
+  .btn{
+    float: right;
+    width: 5.666rem;
+    line-height: 2rem;
   }
 
 </style>

@@ -19,6 +19,7 @@ namespace Cyc.Order.Web.Controllers
             _context = context;
         }
 
+      
         public async Task<IActionResult> Index(int status = 0, int page = 1)
         {
             int[] s = { 1, 10, 99 };
@@ -59,8 +60,7 @@ namespace Cyc.Order.Web.Controllers
             return Json(res);
         }
 
-        // GET: Order/Details/5
-  
+     
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)

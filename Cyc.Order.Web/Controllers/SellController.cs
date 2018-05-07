@@ -22,20 +22,51 @@ namespace Cyc.Order.Web.Controllers
         }
 
         [Route("/Sell/List")]
-        public async Task<IActionResult> Index(int page = 1)
+        public async Task<IActionResult> Index(int page = 1, int brandId = 0)
         {
-            var list = await _context.Goods.Include("Brand").Where(g => !g.IsDelete)
-                .ToPagedListAsync(20, page);
+            var query = _context.Goods
+                .Where(g => !g.IsDelete);
 
-            var model = new ResultModel();
+            if (brandId != 0)
+            {
+                query = query.Where(g => g.BrandId == brandId);
+            }
 
-            model.Code = 100;
-            model.Data = list;
+            var list = await query.Skip((page - 1) * 10).Take(10).ToListAsync();
 
-            if (list.Count == 0)
-                model.Code = 0;
+            // 获取所有商品Id
+            var goodsIds = list.Select(g => g.Id).ToArray();
+            // 获取所有商品的价格
+            var priceList = await _context.GoodsPrices.Where(p => goodsIds.Contains(p.GoodsId)).ToListAsync();
 
-            return Json(model);
+            List<SellGoodViewModel> sellGoodList = new List<SellGoodViewModel>();
+            foreach (var item in list)
+            {
+                SellGoodViewModel sellGood = new SellGoodViewModel();
+                sellGood.Goods = item;
+                var entity = priceList.FirstOrDefault(p => p.GoodsId == item.Id && p.ShopId == 1);
+                if (entity != null)
+                {
+                    sellGood.GoodsPrice = entity;
+                }
+                else
+                {
+                    entity = priceList.FirstOrDefault(p => p.GoodsId == item.Id && p.ShopId == 0);
+                    if (entity != null)
+                    {
+                        sellGood.GoodsPrice = entity;
+                    }
+                }
+                sellGoodList.Add(sellGood);
+            }
+
+            var res = new ResultModel();
+            res.Code = 100;
+            res.Data = sellGoodList;
+            if (sellGoodList.Count == 0)
+                res.Code = 0;
+
+            return Json(res);
         }
 
         public async Task<IActionResult> Details(int? id)
@@ -47,12 +78,30 @@ namespace Cyc.Order.Web.Controllers
 
             var goods = await _context.Goods.Include("Brand")
                 .SingleOrDefaultAsync(m => m.Id == id && !m.IsDelete);
-            if (goods == null)
+            var price = 0.0m;
+
+            var entity = await _context.GoodsPrices.FirstOrDefaultAsync(p => p.GoodsId == goods.Id && p.ShopId == 1);
+            if (entity != null)
             {
-                return NotFound();
+                price = entity.Price;
+            }
+            else
+            {
+                entity = await _context.GoodsPrices.FirstOrDefaultAsync(p => p.GoodsId == goods.Id && p.ShopId == 0);
+                if (entity != null)
+                {
+                    price = entity.Price;
+                }
             }
 
-            return View(goods);
+            var model = new { goods = goods, price = price };
+
+            var res = new ResultModel()
+            {
+                Code = 100,
+                Data = model
+            };
+            return Json(res);
         }
     }
 }

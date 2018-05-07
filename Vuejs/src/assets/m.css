@@ -1,14 +1,10 @@
-﻿html,body{
-  height: 100%;
-}
-
-body {
-  position: relative;
-  margin: 0;
+﻿
+body{
+  padding-bottom: 53px;
 }
 
 #app{
-  height: 100%;
+
 }
 
 li{list-style: none;}
