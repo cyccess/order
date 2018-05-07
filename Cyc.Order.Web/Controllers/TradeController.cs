@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Cyc.Order.Web.Controllers
 {
-    [Authorize(Roles = "admin,system")]
+    //[Authorize(Roles = "admin,system")]
     public class TradeController : Controller
     {
         private readonly OrderDbContext _context;

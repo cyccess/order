@@ -32,6 +32,9 @@ AjaxPlugin.$http.interceptors.request.use((request) => {
     if (!(contentType && contentType.indexOf("application/json") > -1))
       request.data = qs.stringify(request.data);
   }
+
+  request.headers["UID"] = "111111111111";
+
   return request;
 }, error => {
   // 当请求异常时做一些处理

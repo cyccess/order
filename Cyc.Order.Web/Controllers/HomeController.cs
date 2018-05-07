@@ -69,6 +69,36 @@ namespace Cyc.Order.Web.Controllers
             }
         }
 
+        [Route("/Account/Login")]
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel model)
+        {
+            var uid = Request.Headers["UID"];
+
+            var list = new List<dynamic> {
+                new { UserName = "admin", Password = "111aaa", Role = "admin" },
+                new { UserName = "vip1", Password = "111aaa", Role = "system" }
+            };
+
+            var res = new ResultModel();
+
+            var user = list.SingleOrDefault(s => s.UserName == model.UserName && s.Password == model.Password);
+            if (user != null)
+            {
+                res.Code = 100;
+                res.Message = "登录成功";
+                res.Data = user;
+            }
+            else
+            {
+                res.Code =0;
+                res.Message = "用户名或密码错误！";
+            }
+
+            return Json(res);
+        }
+
+
         [HttpGet("logout")]
         public async Task<IActionResult> Logout()
         {

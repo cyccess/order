@@ -74,18 +74,11 @@
         </ul>
       </div>
     </div>
-
-    <toolbar :selected="3"></toolbar>
   </div>
 </template>
 
 <script>
-  import Toolbar from '@/components/Toolbar.vue'
-
   export default {
-    components: {
-      Toolbar
-    },
     data() {
       return {
         data: null,
