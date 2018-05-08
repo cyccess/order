@@ -35,10 +35,7 @@
     },
     computed:{
       isSubmit:function () {
-        if(this.username && this.password){
-          return true;
-        }
-        return false
+        return !!(this.username && this.password);
       }
     },
     methods:{
