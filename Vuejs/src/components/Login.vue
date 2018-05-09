@@ -26,6 +26,7 @@
 </template>
 
 <script>
+  import {setStore} from '../utils'
   export default {
     data() {
       return {
@@ -47,9 +48,9 @@
         };
         let res = await this.$http.post('/api/Account/Login', data);
         if(res.code === 100){
+          this.$cookies.set("ox_sid",res.data.id, -1);
+          this.$cookies.set("ox_username",res.data.name, -1);
           this.$router.push({path:"/list"});
-
-          // localStorage.setItem(access)
         }
         else{
           this.$vux.toast.text(res.message);

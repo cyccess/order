@@ -1,12 +1,14 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
+import qs from 'qs';
 import Vue from 'vue'
 import App from './App'
 import Router from 'vue-router'
 import routes from './router'
 import FastClick from 'fastclick'
 import VueScroller from 'vue-scroller'
-import qs from 'qs';
+import VueCookies from 'vue-cookies'
+
 import {AjaxPlugin, ConfirmPlugin, ToastPlugin} from 'vux'
 
 import './assets/fonts/iconfont.css'
@@ -17,6 +19,7 @@ Vue.use(AjaxPlugin);
 Vue.use(VueScroller);
 Vue.use(ConfirmPlugin);
 Vue.use(ToastPlugin);
+Vue.use(VueCookies);
 
 Vue.config.productionTip = false
 
@@ -32,8 +35,6 @@ AjaxPlugin.$http.interceptors.request.use((request) => {
     if (!(contentType && contentType.indexOf("application/json") > -1))
       request.data = qs.stringify(request.data);
   }
-
-  request.headers["UID"] = "111111111111";
 
   return request;
 }, error => {
@@ -71,16 +72,23 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  window.document.title = to.meta.title;
-
-  let notLoginPage = ['list', 'home', 'detail', 'login', 'register', 'clear'];
-  if (notLoginPage.indexOf(to.name) < 0) {
-    // var user = getUser();
-    // if (user == null) {
-    //   window.location = '/api/login'
-    // }
+  if (to.name === "login") {
+    window.document.title = to.meta.title;
+    next();
   }
-  next();
+  else {
+    let sid = VueCookies.get("ox_sid");
+    if (to.meta.requiresAuth && !sid) {
+      next({
+        path: '/login',
+        query: { redirect: to.fullPath }
+      });
+    }
+    else {
+      window.document.title = to.meta.title;
+      next();
+    }
+  }
 });
 
 Vue.filter('money', function (value) {

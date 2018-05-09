@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cyc.Order.Web.Controllers
 {
-    public class ShoppingCartController : Controller
+    public class ShoppingCartController : BaseController
     {
         private readonly OrderDbContext _context;
 
@@ -53,7 +53,7 @@ namespace Cyc.Order.Web.Controllers
             }
             else
             {
-                var entities = await _context.Carts.Where(c => c.ShopId == 1).ToListAsync();
+                var entities = await _context.Carts.Where(c => c.ShopId == Sid).ToListAsync();
                 foreach (var item in entities)
                 {
                     item.Checked = checkedAll;
@@ -98,7 +98,7 @@ namespace Cyc.Order.Web.Controllers
             }
 
             var entity = await _context.Carts
-                .SingleOrDefaultAsync(c => c.GoodsId == goodsId && c.ShopId == 1 && c.Status == 0);
+                .SingleOrDefaultAsync(c => c.GoodsId == goodsId && c.ShopId == Sid && c.Status == 0);
             if (entity != null)
             {
                 entity.Num += 1;
@@ -108,7 +108,7 @@ namespace Cyc.Order.Web.Controllers
             else
             {
                 var cart = new Cart();
-                cart.ShopId = 1;
+                cart.ShopId = Sid;
                 cart.GoodsId = goodsId.Value;
                 cart.Num = 1;
                 cart.Status = 0;
@@ -140,8 +140,8 @@ namespace Cyc.Order.Web.Controllers
                     item.Price = entity.Price;
                     continue;
                 }
-
-                entity = priceList.FirstOrDefault(p => p.GoodsId == item.GoodsId);
+                // 默认商品价格
+                entity = priceList.FirstOrDefault(p => p.GoodsId == item.GoodsId && p.ShopId == 0);
 
                 if (entity != null)
                 {
@@ -152,7 +152,7 @@ namespace Cyc.Order.Web.Controllers
             var now = DateTime.Now;
 
             OrderRecord order = new OrderRecord();
-            order.ShopId = 1;
+            order.ShopId = Sid;
             order.Status = 0;
             order.Num = carts.Sum(c => c.Num);
             order.TotalAmount = carts.Sum(c => c.Num * c.Price);
@@ -230,7 +230,7 @@ namespace Cyc.Order.Web.Controllers
         {
             var query = from c in _context.Carts
                         join g in _context.Goods on c.GoodsId equals g.Id
-                        where c.ShopId == 1 && c.Status == 0
+                        where c.ShopId == Sid && c.Status == 0
                         select new ShoppingCartGoodsModel
                         {
                             Id = c.Id,

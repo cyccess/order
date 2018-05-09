@@ -77,6 +77,7 @@ namespace Cyc.Order.Web.Controllers
             if (ModelState.IsValid)
             {
                 shop.AddDate = DateTime.Now;
+                shop.Password = Utils.MD5Encrypt("888888");
                 _context.Add(shop);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

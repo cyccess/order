@@ -27,7 +27,7 @@ export default [
     path: '/myOrder',
     name: 'myOrder',
     component: MyOrder,
-    meta: {title: '我的订单'}
+    meta: {title: '我的订单',requiresAuth :true}
   },
   {
     path: '/list',
@@ -45,25 +45,25 @@ export default [
     path: '/shoppingCart',
     name: 'shoppingCart',
     component: ShoppingCart,
-    meta: {title: '购物车'}
+    meta: {title: '购物车',requiresAuth :true}
   },
   {
     path: '/orderConfirm',
     name: 'orderConfirm',
     component: OrderConfirm,
-    meta: {title: '订单结算'}
+    meta: {title: '订单结算',requiresAuth :true}
   },
   {
     path: '/submitOrderSuccess',
     name: 'submitOrderSuccess',
     component: SubmitOrderSuccess,
-    meta: {title: '订单提交'}
+    meta: {title: '订单提交',requiresAuth :true}
   },
   {
     path: '/orderDetail',
     name: 'orderDetail',
     component: OrderDetail,
-    meta: {title: '订单详情'}
+    meta: {title: '订单详情',requiresAuth :true}
   },
   {
     path: '/order',
@@ -73,12 +73,12 @@ export default [
       {
         path: 'list',
         component: resolve => require(['@/components/trade/List.vue'], resolve),
-        meta: {title: '订单列表'}
+        meta: {title: '订单列表',requiresAuth :true}
       },
       {
         path: 'detail',
         component: resolve => require(['@/components/trade/Detail.vue'], resolve),
-        meta: {title: '订单详情'}
+        meta: {title: '订单详情',requiresAuth :true}
       }
     ]
   }

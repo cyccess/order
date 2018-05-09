@@ -10,7 +10,7 @@ using Sakura.AspNetCore;
 
 namespace Cyc.Order.Web.Controllers
 {
-    public class OrderController : Controller
+    public class OrderController : BaseController
     {
         private readonly OrderDbContext _context;
 
@@ -19,12 +19,12 @@ namespace Cyc.Order.Web.Controllers
             _context = context;
         }
 
-      
+
         public async Task<IActionResult> Index(int status = 0, int page = 1)
         {
             int[] s = { 1, 10, 99 };
             var query = _context.OrderRecords
-                .Where(o => o.ShopId == 1 && s.Contains(o.Status));
+                .Where(o => o.ShopId == Sid && s.Contains(o.Status));
 
             if (status != 0)
             {
@@ -60,7 +60,7 @@ namespace Cyc.Order.Web.Controllers
             return Json(res);
         }
 
-     
+
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -69,7 +69,7 @@ namespace Cyc.Order.Web.Controllers
             }
 
             var orderRecord = await _context.OrderRecords
-                .SingleOrDefaultAsync(m => m.Id == id && m.ShopId == 1);
+                .SingleOrDefaultAsync(m => m.Id == id && m.ShopId == Sid);
             if (orderRecord == null)
             {
                 return NotFound();
@@ -93,10 +93,10 @@ namespace Cyc.Order.Web.Controllers
         public async Task<IActionResult> CancelOrder(int id)
         {
             var orderRecord = await _context.OrderRecords
-                .SingleOrDefaultAsync(m => m.Id == id && m.ShopId == 1);
+                .SingleOrDefaultAsync(m => m.Id == id && m.ShopId == Sid);
             orderRecord.Status = (int)OrderStatus.Cancel;
             await _context.SaveChangesAsync();
-            return Json(new { code=100, message = "订单取消成功！" });
+            return Json(new { code = 100, message = "订单取消成功！" });
         }
 
 
@@ -105,7 +105,7 @@ namespace Cyc.Order.Web.Controllers
         public async Task<IActionResult> OrderConfirm(int oid)
         {
             var orderRecord = await _context.OrderRecords
-                .SingleOrDefaultAsync(o => o.Id == oid);
+                .SingleOrDefaultAsync(o => o.Id == oid && o.ShopId == Sid);
 
             var orderRecordDetails = await _context.OrderRecordDetails.Where(o => o.OrderId == oid).ToListAsync();
 
@@ -125,7 +125,7 @@ namespace Cyc.Order.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> SubmitOrder(int oid)
         {
-            var orderInfo = await _context.OrderRecords.SingleOrDefaultAsync(o => o.Id == oid);
+            var orderInfo = await _context.OrderRecords.SingleOrDefaultAsync(o => o.Id == oid && o.ShopId == Sid);
             // 获取订单商品
             var orderGoods = await _context.OrderRecordDetails
                 .Where(g => g.OrderId == oid)

@@ -12,7 +12,7 @@ using Sakura.AspNetCore;
 namespace Cyc.Order.Web.Controllers
 {
     //[Authorize(Roles = "admin,system")]
-    public class SellController : Controller
+    public class SellController : BaseController
     {
         private readonly OrderDbContext _context;
 
@@ -44,13 +44,14 @@ namespace Cyc.Order.Web.Controllers
             {
                 SellGoodViewModel sellGood = new SellGoodViewModel();
                 sellGood.Goods = item;
-                var entity = priceList.FirstOrDefault(p => p.GoodsId == item.Id && p.ShopId == 1);
+                var entity = priceList.FirstOrDefault(p => p.GoodsId == item.Id && p.ShopId == Sid);
                 if (entity != null)
                 {
                     sellGood.GoodsPrice = entity;
                 }
                 else
                 {
+                    // 取商品默认价格
                     entity = priceList.FirstOrDefault(p => p.GoodsId == item.Id && p.ShopId == 0);
                     if (entity != null)
                     {
@@ -80,13 +81,14 @@ namespace Cyc.Order.Web.Controllers
                 .SingleOrDefaultAsync(m => m.Id == id && !m.IsDelete);
             var price = 0.0m;
 
-            var entity = await _context.GoodsPrices.FirstOrDefaultAsync(p => p.GoodsId == goods.Id && p.ShopId == 1);
+            var entity = await _context.GoodsPrices.FirstOrDefaultAsync(p => p.GoodsId == goods.Id && p.ShopId == Sid);
             if (entity != null)
             {
                 price = entity.Price;
             }
             else
             {
+                // 取商品默认价格
                 entity = await _context.GoodsPrices.FirstOrDefaultAsync(p => p.GoodsId == goods.Id && p.ShopId == 0);
                 if (entity != null)
                 {

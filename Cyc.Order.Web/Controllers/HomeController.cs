@@ -1,8 +1,10 @@
-﻿using Cyc.Order.Web.Models;
+﻿using Cyc.Order.Data;
+using Cyc.Order.Web.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -13,6 +15,14 @@ namespace Cyc.Order.Web.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly OrderDbContext _context;
+
+        public HomeController(OrderDbContext context)
+        {
+            _context = context;
+        }
+
+
         public IActionResult Index()
         {
             return View();
@@ -34,6 +44,7 @@ namespace Cyc.Order.Web.Controllers
                 new { UserName = "admin", Password = "111aaa", Role = "admin" },
                 new { UserName = "vip1", Password = "111aaa", Role = "system" }
             };
+
             var user = list.SingleOrDefault(s => s.UserName == model.UserName && s.Password == model.Password);
             if (user != null)
             {
@@ -73,25 +84,29 @@ namespace Cyc.Order.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            var uid = Request.Headers["UID"];
-
-            var list = new List<dynamic> {
-                new { UserName = "admin", Password = "111aaa", Role = "admin" },
-                new { UserName = "vip1", Password = "111aaa", Role = "system" }
-            };
+            //var uid = Request.Headers["UID"];
 
             var res = new ResultModel();
 
-            var user = list.SingleOrDefault(s => s.UserName == model.UserName && s.Password == model.Password);
-            if (user != null)
+            if (string.IsNullOrEmpty(model.UserName) || string.IsNullOrEmpty(model.Password))
+            {
+                res.Code = 0;
+                res.Message = "用户名或密码不能为空";
+                return Json(res);
+            }
+
+            var password = Utils.MD5Encrypt(model.Password);
+            var entity = await _context.Shops.SingleOrDefaultAsync(s => s.Phone == model.UserName && s.Password == password);
+
+            if (entity != null)
             {
                 res.Code = 100;
                 res.Message = "登录成功";
-                res.Data = user;
+                res.Data = new { id = entity.Id, name = entity.Name };
             }
             else
             {
-                res.Code =0;
+                res.Code = 0;
                 res.Message = "用户名或密码错误！";
             }
 
