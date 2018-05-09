@@ -1,11 +1,8 @@
-﻿@model GoodsViewModel
+﻿@model PriceViewModel
 @{
-    ViewData["Title"] = "商品管理";
+    ViewData["Title"] = "价格管理";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<p>
-    <a asp-action="Create" class="btn btn-success"><i class="fa fa-plus"></i>新加商品</a>
-</p>
 <div class="card">
     <div class="content">
         <form asp-action="Index" class="form-inline" method="get">
@@ -55,14 +52,14 @@
                         单位
                     </th>
                     <th>
-                        添加时间
+                        单价
                     </th>
-                    <th></th>
+                    <th>操作</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.Goods)
-            {
+                @foreach (var item in Model.Row)
+                {
                 <tr>
                     <td>
                         <img src="@item.GoodsImg" alt="" width="60" height="60" />
@@ -74,7 +71,7 @@
                         @Html.DisplayFor(modelItem => item.GoodsCode)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Brand.Name)
+                        @Html.DisplayFor(modelItem => item.BrandName)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.GoodsSepc)
@@ -83,19 +80,17 @@
                         @Html.DisplayFor(modelItem => item.GoodsUnit)
                     </td>
                     <td>
-                        @item.AddTime.ToShortDateString()
+                        ¥@Html.DisplayFor(modelItem => item.GoodsPrice)
                     </td>
                     <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id">修改</a> |
-                        <a asp-action="Details" asp-route-id="@item.Id">详情</a> |
-                        <a class="delete" data-id="@item.Id" href="javascript:;">删除</a>
+                        <a asp-action="Details" asp-route-id="@item.Id">价格管理</a>
                     </td>
                 </tr>
-        }
+                }
             </tbody>
         </table>
         <ul class="pagination">
-            <pager generation-mode="ListOnly" source="Model.Goods" />
+            <pager generation-mode="ListOnly" source="Model.Row" />
         </ul>
     </div>
 </div>

@@ -17,11 +17,10 @@ namespace Cyc.Order.Web.Controllers
         {
             get
             {
-                var ox_sid = Request.Cookies["ox_sid"];
-                if (!string.IsNullOrEmpty(ox_sid))
+                var cx_sid = Request.Cookies["cx_sid"];
+                if (!string.IsNullOrEmpty(cx_sid))
                 {
-                    int id = 0;
-                    int.TryParse(ox_sid, out id);
+                    int.TryParse(cx_sid, out int id);
                     sid = id;
                 }
 

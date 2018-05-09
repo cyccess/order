@@ -1,0 +1,100 @@
+﻿@model List<PriceDetailViewModel>
+@{
+    var goods = (Goods)ViewBag.Goods;
+    ViewData["Title"] = goods.GoodsName;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="card">
+    <div class="content">
+        <section class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-10">
+                    <p class="form-control-static">
+                        <img src="@goods.GoodsImg" alt="Alternate Text" width="135" height="135" />
+                    </p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-10">
+                    <p class="form-control-static">
+                        @goods.GoodsName
+                    </p>
+                </div>
+            </div>
+
+        </section>
+
+    </div>
+</div>
+
+<div class="card">
+    <div class="content">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        店铺名称
+                    </th>
+                    <th>
+                        销售单价
+                    </th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                <tr>
+                    <td>
+                        @if (string.IsNullOrEmpty(item.ShopName))
+                    {
+
+                    <span class="text-muted">默认价格</span>
+                        }
+                        else
+                        {
+                    <span>@item.ShopName</span>
+
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Price)
+                    </td>
+                    
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id">修改</a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(function () {
+
+            $(".delete").on("click", function () {
+                var id = $(this).data("id");
+                swal({
+                    title: '确定删除吗？',
+                    text: "删除商品后将无法恢复！",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '确定删除',
+                    cancelButtonText: '取消'
+                }).then(function () {
+                    $.post("/goods/delete", { id: id }, function (data) {
+                        swal('删除!', data.message, 'success').then(function () {
+                            location.reload();
+                        });
+                    });
+                }).catch(swal.noop);
+            });
+        })
+    </script>
+}

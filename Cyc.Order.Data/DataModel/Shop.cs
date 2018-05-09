@@ -34,6 +34,9 @@ namespace Cyc.Order.Data.DataModel
         [Column("region_id")]
         public int RegionId { get; set; }
 
+        [Column("user_type")]
+        public byte UserType { get; set; }
+
         [Column("add_date")]
         public DateTime AddDate { get; set; }
 

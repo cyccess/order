@@ -168,8 +168,6 @@ namespace Cyc.Order.Web.Controllers
             return View(goods);
         }
 
-
-
         // POST: Goods/Delete/5
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -204,6 +202,7 @@ namespace Cyc.Order.Web.Controllers
             var host = HttpContext.Request.Host.Value;
             return Json(new { imgPath = $"http://{host}/{newName.Replace(@"\", @"/")}" });
         }
+
 
         private bool GoodsExists(int id)
         {

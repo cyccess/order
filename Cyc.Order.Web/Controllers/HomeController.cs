@@ -82,7 +82,7 @@ namespace Cyc.Order.Web.Controllers
 
         [Route("/Account/Login")]
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> AccountLogin(LoginViewModel model)
         {
             //var uid = Request.Headers["UID"];
 
@@ -102,12 +102,12 @@ namespace Cyc.Order.Web.Controllers
             {
                 res.Code = 100;
                 res.Message = "登录成功";
-                res.Data = new { id = entity.Id, name = entity.Name };
+                res.Data = new { id = entity.Id, username = entity.Name, userType = entity.UserType };
             }
             else
             {
                 res.Code = 0;
-                res.Message = "用户名或密码错误！";
+                res.Message = "用户名或密码错误";
             }
 
             return Json(res);

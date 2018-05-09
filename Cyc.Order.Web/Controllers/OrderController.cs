@@ -135,10 +135,13 @@ namespace Cyc.Order.Web.Controllers
                 .Where(c => orderGoods.Contains(c.GoodsId) && c.ShopId == orderInfo.ShopId && c.Status == 0 && c.Checked)
                 .ToListAsync();
 
+            var now = DateTime.Now;
+
             // 修改购物车商品状态
             foreach (var item in carts)
             {
                 item.Status = 2;
+                item.UpdateTime = now;
             }
 
             // 更新订单收货信息
@@ -147,7 +150,7 @@ namespace Cyc.Order.Web.Controllers
             orderInfo.Address = shop.Address;
             orderInfo.MobilePhone = shop.Phone;
             orderInfo.Status = (int)OrderStatus.Undelivered; // 更新订单状态
-            orderInfo.UpdateDate = DateTime.Now;
+            orderInfo.UpdateDate = now;
 
             await _context.SaveChangesAsync();
 
