@@ -170,6 +170,7 @@
   }
   .m-info .line .count {
     float: right;
+
   }
 
   .m-mainViewFt{
@@ -192,7 +193,12 @@
   .m-mainViewFt .main .actualPrice {
     float: left;
     line-height: 3.28rem;
-    font-size: .8753rem
+    font-size: .8753rem;
+  }
+
+  .m-mainViewFt .main .actualPrice .count {
+    color:#e4393c;
+    font-weight: 700;
   }
 
   .m-mainViewFt .main .btn {

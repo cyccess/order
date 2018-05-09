@@ -77,7 +77,7 @@ router.beforeEach((to, from, next) => {
     next();
   }
   else {
-    let sid = VueCookies.get("ox_sid");
+    let sid = VueCookies.get("cx_sid");
     if (to.meta.requiresAuth && !sid) {
       next({
         path: '/login',

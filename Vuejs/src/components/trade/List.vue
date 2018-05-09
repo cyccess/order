@@ -1,71 +1,88 @@
 <template>
-  <div class="m-orderList">
-    <scroller :on-refresh="refresh" :on-infinite="infinite" ref="myscroller" :no-data-text="noData">
-      <div v-for="(item,index) in list" :key="index" @click="go(item.orderRecord.id)" class="m-orderItem">
-        <div class="line">
-          <span class="orderId">
-              <span>订单编号：{{item.orderRecord.id}}</span>
-          </span>
-          <div @click.stop.prevent="cancelOrder(index)" v-if="item.orderRecord.status===1" class="order-cancel">取消订单</div>
-        </div>
-        <div class="goods-detail">
-          <div v-if="item.orderRecordDetailList.length===1">
-            <div class="goodImg">
-              <div class="wraper">
-                <img :src="item.orderRecordDetailList[0].img">
+  <div>
+    <tab>
+      <tab-item @on-item-click="chooseTab(0)">全部</tab-item>
+      <tab-item selected @on-item-click="chooseTab(1)">待发货</tab-item>
+      <tab-item @on-item-click="chooseTab(10)">已完成</tab-item>
+    </tab>
+
+    <div class="m-orderList">
+      <scroller :on-refresh="refresh" :on-infinite="infinite" ref="myscroller" :no-data-text="noData">
+        <div v-for="(item,index) in list" :key="index" @click="go(item.orderRecord.id)" class="m-orderItem">
+          <div class="line">
+            <span class="orderId">
+                <span>订单编号：{{item.orderRecord.id}}</span>
+            </span>
+            <div @click.stop.prevent="cancelOrder(index)" v-if="item.orderRecord.status===1" class="order-cancel">取消订单</div>
+          </div>
+          <div class="goods-detail">
+            <div v-if="item.orderRecordDetailList.length===1">
+              <div class="goodImg">
+                <div class="wraper">
+                  <img :src="item.orderRecordDetailList[0].img">
+                </div>
+              </div>
+              <div class="goodInfo">
+                <div class="goodName">{{item.orderRecordDetailList[0].name}}</div>
+              </div>
+              <div class="goodStatus">
+                <div class="packageStatus">
+                  {{item.orderRecord.status|orderState}}
+                </div>
               </div>
             </div>
-            <div class="goodInfo">
-              <div class="goodName">{{item.orderRecordDetailList[0].name}}</div>
-            </div>
-            <div class="goodStatus">
-              <div class="packageStatus">
-                {{item.orderRecord.status|orderState}}
+            <div v-else>
+              <div v-for="(good,index) in item.orderRecordDetailList" v-if="index<3" class="goodImg ">
+                <div class="wraper">
+                  <img :src="good.img">
+                </div>
+              </div>
+              <div class="goodStatus">
+                <div class="packageStatus">
+                  {{item.orderRecord.status|orderState}}
+                </div>
               </div>
             </div>
           </div>
-          <div v-else>
-            <div v-for="(good,index) in item.orderRecordDetailList" v-if="index<3" class="goodImg ">
-              <div class="wraper">
-                <img :src="good.img">
-              </div>
-            </div>
-            <div class="goodStatus">
-              <div class="packageStatus">
-                {{item.orderRecord.status|orderState}}
-              </div>
+          <div class="m-btnGroup vux-1px-t" v-if="item.orderRecord.status===1">
+            <div class="m-btnInner">
+              <button @click.stop.prevent="confirmedDeliver(index)" class="btn w-button"><i class="icon icon-clock"></i> 确认发货</button>
             </div>
           </div>
         </div>
-        <div class="m-btnGroup vux-1px-t" v-if="item.orderRecord.status===1">
-          <div class="m-btnInner">
-            <button @click.stop.prevent="confirmedDeliver(index)" class="btn w-button"><i class="icon icon-clock"></i> 确认发货</button>
-          </div>
-        </div>
-      </div>
-    </scroller>
+      </scroller>
+    </div>
     <toolbar :selected="3"></toolbar>
   </div>
 </template>
 
 <script>
   import Toolbar from '@/components/Toolbar.vue'
+  import {Tab, TabItem} from 'vux'
 
   export default {
     components: {
-      Toolbar
+      Toolbar, Tab, TabItem,
     },
     data() {
       return {
         list: [],
         page: 0,
-        noData: ''
+        noData: '',
+        state:1,
       }
     },
     created() {
 
     },
     methods: {
+      chooseTab(state){
+        this.state = state;
+        this.page = 0;
+        this.noData = '';
+        this.list = [];
+        this.$refs.myscroller.finishInfinite(false);
+      },
       refresh(done) {
         this.list = [];
         this.page = 0;
@@ -79,7 +96,7 @@
         }
 
         this.page += 1;
-        let res = await this.$http.post('/api/Order/MyList', {page: this.page});
+        let res = await this.$http.post('/api/Order/MyList', {page: this.page,status:this.state});
 
         if (res.code === 100) {
           if (res.data.length < 10) {
@@ -142,7 +159,12 @@
 <style scoped>
   /*订单*/
   .m-orderList {
-
+    position: absolute;
+    top:0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    margin-top: 44px;
   }
 
   .m-orderItem {
@@ -218,7 +240,7 @@
   }
 
   .m-orderItem .packageStatus {
-    color: #b4282d
+    color: #e4393c
   }
   .m-btnGroup{
     position: relative;

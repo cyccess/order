@@ -1,4 +1,11 @@
 <template>
+<div>
+  <tab>
+    <tab-item @on-item-click="chooseTab(0)">全部</tab-item>
+    <tab-item selected @on-item-click="chooseTab(1)">待发货</tab-item>
+    <tab-item @on-item-click="chooseTab(10)">已完成</tab-item>
+  </tab>
+
   <div class="m-orderList">
     <scroller :on-refresh="refresh" :on-infinite="infinite" ref="myscroller" :no-data-text="noData">
       <div v-for="(item,index) in list" :key="index" @click="go(item.orderRecord.id)" class="m-orderItem">
@@ -39,28 +46,38 @@
         </div>
       </div>
     </scroller>
-    <toolbar :selected="3"></toolbar>
   </div>
+
+  <toolbar :selected="3"></toolbar>
+</div>
 </template>
 
 <script>
   import Toolbar from '@/components/Toolbar.vue'
-
+  import {Tab, TabItem} from 'vux'
   export default {
     components: {
-      Toolbar
+      Toolbar, Tab, TabItem
     },
     data() {
       return {
         list: [],
         page: 0,
-        noData: ''
+        noData: '',
+        state:1,
       }
     },
     created() {
 
     },
     methods: {
+      chooseTab(state){
+        this.state = state;
+        this.page = 0;
+        this.noData = '';
+        this.list = [];
+        this.$refs.myscroller.finishInfinite(false);
+      },
       refresh(done) {
         this.list = [];
         this.page = 0;
@@ -74,13 +91,12 @@
         }
 
         this.page += 1;
-        let res = await this.$http.post('/api/Order', {page: this.page});
+        let res = await this.$http.post('/api/Order', {page: this.page,status:this.state});
 
         if (res.code === 100) {
           if (res.data.length < 10) {
             this.noData = '没有更多了';
           }
-
           this.list = [...this.list, ...res.data];
         }
         else {
@@ -117,7 +133,12 @@
 <style scoped>
   /*订单*/
   .m-orderList {
-
+    position: absolute;
+    top:0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    margin-top: 44px;
   }
 
   .m-orderItem {

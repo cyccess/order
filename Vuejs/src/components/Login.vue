@@ -26,12 +26,17 @@
 </template>
 
 <script>
-  import {setStore} from '../utils'
   export default {
+    beforeRouteEnter(to, from, next){
+      next(vm=>{
+       vm.redirect = vm.$route.query.redirect;
+      })
+    },
     data() {
       return {
         username:'',
-        password:''
+        password:'',
+        redirect:''
       }
     },
     computed:{
@@ -48,9 +53,17 @@
         };
         let res = await this.$http.post('/api/Account/Login', data);
         if(res.code === 100){
-          this.$cookies.set("ox_sid",res.data.id, -1);
-          this.$cookies.set("ox_username",res.data.name, -1);
-          this.$router.push({path:"/list"});
+          this.$cookies.set("cx_sid",res.data.id, -1);
+          this.$cookies.set("cx_username",res.data.username, -1);
+          this.$cookies.set('cx_usertype',res.data.userType, -1);
+
+          console.log("redirect:"+this.redirect)
+          if(this.redirect){
+            this.$router.push({path:this.redirect});
+          }
+          else {
+            this.$router.push({path:"/list"});
+          }
         }
         else{
           this.$vux.toast.text(res.message);
