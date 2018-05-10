@@ -103,7 +103,7 @@ Vue.filter("orderState", function (value) {
   if (value === 1)
     return "待发货";
   if (value === 10)
-    return "已发货";
+    return "已完成";
   if (value === 99)
     return "已取消";
 });

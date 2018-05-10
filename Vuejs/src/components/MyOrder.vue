@@ -1,9 +1,10 @@
 <template>
 <div>
   <tab>
-    <tab-item @on-item-click="chooseTab(0)">全部</tab-item>
-    <tab-item selected @on-item-click="chooseTab(1)">待发货</tab-item>
+    <tab-item selected @on-item-click="chooseTab(0)">全部</tab-item>
+    <tab-item @on-item-click="chooseTab(1)">待收货</tab-item>
     <tab-item @on-item-click="chooseTab(10)">已完成</tab-item>
+    <tab-item @on-item-click="chooseTab(99)">已取消</tab-item>
   </tab>
 
   <div class="m-orderList">
@@ -64,7 +65,7 @@
         list: [],
         page: 0,
         noData: '',
-        state:1,
+        state:0,
       }
     },
     created() {
