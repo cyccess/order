@@ -191,7 +191,7 @@ namespace Cyc.Order.Web.Controllers
 
             var ext = Path.GetExtension(filename);
             var newName = Path.Combine("images", DateTime.Now.Ticks + ext);
-            var filePath = hostingEnv.WebRootPath + $@"\{newName}";
+            var filePath = hostingEnv.WebRootPath + $@"/{newName}";
 
             using (FileStream fs = System.IO.File.Create(filePath))
             {
