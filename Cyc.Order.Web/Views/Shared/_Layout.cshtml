@@ -96,14 +96,10 @@
                     </div>
                     <div class="collapse navbar-collapse">
                         <ul class="nav navbar-nav navbar-right">
-                            <li>
-                                <a asp-action="Index" asp-controller="ShoppingCart">
-                                    <i class="pe pe-7s-cart"></i>
-                                    购物车
-                                </a>
-                            </li>
                             <li class="dropdown">
-                                <a href="">我的订单</a>
+                                <a asp-action="List" asp-controller="Order">
+                                    我的订单
+                                </a>
                             </li>
                             <li>
                                 <a href="#">欢迎，@User.Identity.Name</a>

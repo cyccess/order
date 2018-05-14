@@ -44,6 +44,21 @@ namespace Cyc.Order.Web.Controllers
             return View(model);
         }
 
+        // 获取所有店铺
+        [HttpPost]
+        public async Task<IActionResult> List()
+        {
+            var list = await _context.Shops.Where(s => !s.IsDelete)
+                .Select(s => new { id = s.Id, name = s.Name })
+                .ToListAsync();
+            var res = new ResultModel()
+            {
+                Code = 100,
+                Data = list
+            };
+            return Json(res);
+        }
+
         // GET: Shops/Details/5
         public async Task<IActionResult> Details(int? id)
         {

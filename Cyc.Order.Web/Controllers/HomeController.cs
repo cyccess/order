@@ -84,8 +84,6 @@ namespace Cyc.Order.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AccountLogin(LoginViewModel model)
         {
-            //var uid = Request.Headers["UID"];
-
             var res = new ResultModel();
 
             if (string.IsNullOrEmpty(model.UserName) || string.IsNullOrEmpty(model.Password))

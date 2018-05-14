@@ -24,9 +24,11 @@
             </div>
 
         </section>
-
     </div>
 </div>
+<p>
+    <a href="javascript:;" class="btn btn-success add" data-id="@goods.Id"><i class="fa fa-plus"></i>添加店铺价格</a>
+</p>
 
 <div class="card">
     <div class="content">
@@ -45,27 +47,33 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                <tr>
-                    <td>
-                        @if (string.IsNullOrEmpty(item.ShopName))
-                    {
+                    <tr>
+                        <td>
+                            @if (string.IsNullOrEmpty(item.ShopName))
+                            {
 
-                    <span class="text-muted">默认价格</span>
-                        }
-                        else
-                        {
-                    <span>@item.ShopName</span>
+                                <span class="text-muted">默认价格</span>
+                            }
+                            else
+                            {
+                                <span>@item.ShopName</span>
 
-                        }
-                    </td>
-                    <td>
-                        ¥@Html.DisplayFor(modelItem => item.Price)
-                    </td>
-                    
-                    <td>
-                        <a asp-action="Details" asp-route-id="@item.Id">修改</a>
-                    </td>
-                </tr>
+                            }
+                        </td>
+                        <td>
+                            ¥@Html.DisplayFor(modelItem => item.Price)
+                        </td>
+
+                        <td>
+                            <a class="edit" href="javascript:;" data-id="@item.Id" data-price="@item.Price">修改</a>
+
+                            @if (!string.IsNullOrEmpty(item.ShopName))
+                            {
+                                <span>|</span>
+                                <a class="delete" href="javascript:;" data-id="@item.Id">删除</a>
+                            }
+                        </td>
+                    </tr>
                 }
             </tbody>
         </table>
@@ -75,12 +83,50 @@
 @section Scripts{
     <script>
         $(function () {
+            var reg = /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/;
+
+            $(".edit").on("click", function () {
+                var $that = $(this);
+                var id = $that.data("id");
+                var title = $that.parent().parent().find("td:first").text();
+                var price = $that.data("price");
+                swal({
+                    title: title,
+                    input: 'text',
+                    showCancelButton: true,
+                    confirmButtonText: '确定修改',
+                    cancelButtonText: "取消",
+                    showLoaderOnConfirm: true,
+                    inputValue: price,
+                    inputValidator: function (value) {
+                        return new Promise(function (resolve, reject) {
+                            if (reg.test(value)) {
+                                resolve()
+                            } else {
+                                reject('请输入正确的价格')
+                            }
+                        })
+                    },
+                    allowOutsideClick: false
+                }).then(function (result) {
+                    $.post("/Price/ModifyPrice", { id: id, price: result }, function (res) {
+                        if (res.code === 100) {
+                            $that.parent().parent().find("td:eq(1)").text("¥" + result);
+                            swal({
+                                type: 'success',
+                                html: '价格已修改为: ¥ ' + result
+                            });
+                        }
+                    });
+
+                }).catch(swal.noop);
+            });
 
             $(".delete").on("click", function () {
                 var id = $(this).data("id");
                 swal({
                     title: '确定删除吗？',
-                    text: "删除商品后将无法恢复！",
+                    text: "删除价格后将无法恢复！",
                     type: 'warning',
                     showCancelButton: true,
                     confirmButtonColor: '#3085d6',
@@ -88,12 +134,75 @@
                     confirmButtonText: '确定删除',
                     cancelButtonText: '取消'
                 }).then(function () {
-                    $.post("/goods/delete", { id: id }, function (data) {
+                    $.post("/price/delete", { id: id }, function (data) {
                         swal('删除!', data.message, 'success').then(function () {
                             location.reload();
                         });
                     });
                 }).catch(swal.noop);
+            });
+
+            $(".add").on("click", function () {
+                var goodsId = $(this).data("id");
+                swal({
+                    title: '加载中...',
+                    onOpen: function () {
+                        swal.showLoading()
+                        $.post("/shops/list").done(function (res) {
+                            var arr = res.data;
+                            var shopSelect = [];
+                            shopSelect.push('<select id="shopId" class="swal2-input">')
+                            shopSelect.push('<option value="" disabled selected>选择店铺</option>');
+                            for (j = 0, len = arr.length; j < len; j++) {
+                                shopSelect.push('<option value="' + arr[j].id + '">' + arr[j].name + '</option>');
+                            }
+
+                            swal({
+                                title: '新增商品价格',
+                                allowOutsideClick: false,
+                                showLoaderOnConfirm: true,
+                                showCancelButton: true,
+                                confirmButtonText: '确定',
+                                cancelButtonText: '取消',
+                                html: shopSelect.join(''),
+                                input: "text",
+                                inputPlaceholder: "请输入价格",
+                                inputValidator: function (value) {
+                                    return new Promise(function (resolve, reject) {
+                                        if (reg.test(value)) {
+                                            resolve()
+                                        } else {
+                                            reject('请输入正确的价格')
+                                        }
+                                    })
+                                },
+                                preConfirm: function (price) {
+                                    return new Promise(function (resolve, reject) {
+                                        var shopId = $('#shopId').val();
+                                        if (shopId) {
+                                            resolve({ shopId: shopId, price: price });
+                                           
+                                        } else {
+                                            reject('请选择店铺');
+                                        }
+                                    })
+                                }
+                            }).then(function (result) {
+                                result.goodsId = goodsId;
+                                $.post("/price/add", result).done(function (res) {
+                                    if (res.code === 100) {
+                                        swal('', res.message, 'success').then(function () {
+                                            location.reload();
+                                        });
+                                    }
+                                    else {
+                                        swal({ type: 'warning', html: res.message});
+                                    }
+                                });
+                            }).catch(swal.noop);
+                        });
+                    }
+                })
             });
         })
     </script>

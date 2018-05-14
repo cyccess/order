@@ -44,7 +44,7 @@ namespace Cyc.Order.Web.Controllers
             {
                 SellGoodViewModel sellGood = new SellGoodViewModel();
                 sellGood.Goods = item;
-                var entity = priceList.FirstOrDefault(p => p.GoodsId == item.Id && p.ShopId == Sid);
+                var entity = priceList.FirstOrDefault(p => p.GoodsId == item.Id && p.ShopId == Sid && !p.IsDelete);
                 if (entity != null)
                 {
                     sellGood.GoodsPrice = entity;
@@ -81,7 +81,7 @@ namespace Cyc.Order.Web.Controllers
                 .SingleOrDefaultAsync(m => m.Id == id && !m.IsDelete);
             var price = 0.0m;
 
-            var entity = await _context.GoodsPrices.FirstOrDefaultAsync(p => p.GoodsId == goods.Id && p.ShopId == Sid);
+            var entity = await _context.GoodsPrices.FirstOrDefaultAsync(p => p.GoodsId == goods.Id && p.ShopId == Sid && !p.IsDelete);
             if (entity != null)
             {
                 price = entity.Price;

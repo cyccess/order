@@ -21,5 +21,8 @@ namespace Cyc.Order.Data.DataModel
 
         [Column("shop_id")]
         public int ShopId { get; set; }
+
+        [Column("is_delete")]
+        public bool IsDelete { get; set; }
     }
 }

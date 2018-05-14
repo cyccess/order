@@ -134,7 +134,7 @@ namespace Cyc.Order.Web.Controllers
 
             foreach (var item in carts)
             {
-                var entity = priceList.FirstOrDefault(p => p.GoodsId == item.GoodsId && p.ShopId == item.ShopId);
+                var entity = priceList.FirstOrDefault(p => p.GoodsId == item.GoodsId && p.ShopId == item.ShopId && !p.IsDelete);
                 if (entity != null)
                 {
                     item.Price = entity.Price;
@@ -197,14 +197,14 @@ namespace Cyc.Order.Web.Controllers
 
             foreach (var item in cartGoodsList)
             {
-                var model = priceList.FirstOrDefault(p => p.GoodsId == item.GoodsId && p.ShopId == item.ShopId);
+                var model = priceList.FirstOrDefault(p => p.GoodsId == item.GoodsId && p.ShopId == item.ShopId && !p.IsDelete);
                 if (model != null)
                 {
                     item.Price = model.Price;
                     continue;
                 }
 
-                model = priceList.FirstOrDefault(p => p.GoodsId == item.GoodsId);
+                model = priceList.FirstOrDefault(p => p.GoodsId == item.GoodsId && item.ShopId == 0);
 
                 if (model != null)
                 {

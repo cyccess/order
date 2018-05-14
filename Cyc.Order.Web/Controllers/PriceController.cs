@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Cyc.Order.Data;
+﻿using Cyc.Order.Data;
+using Cyc.Order.Data.DataModel;
 using Cyc.Order.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Sakura.AspNetCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Cyc.Order.Web.Controllers
 {
@@ -68,7 +68,7 @@ namespace Cyc.Order.Web.Controllers
                         join s in _context.Shops on p.ShopId equals s.Id
                         into temp
                         from ss in temp.DefaultIfEmpty()
-                        where p.GoodsId == id
+                        where p.GoodsId == id && !p.IsDelete
                         select new PriceDetailViewModel
                         {
                             Id = p.Id,
@@ -79,5 +79,65 @@ namespace Cyc.Order.Web.Controllers
             return View(list);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> ModifyPrice(int id, decimal price)
+        {
+            var res = new ResultModel();
+            var entity = await _context.GoodsPrices
+                .SingleOrDefaultAsync(p => p.Id == id && !p.IsDelete);
+
+            entity.Price = price;
+
+            await _context.SaveChangesAsync();
+            res.Code = 100;
+            res.Message = "价格修改成功";
+            return Json(res);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var res = new ResultModel();
+            var entity = await _context.GoodsPrices
+                .SingleOrDefaultAsync(p => p.Id == id && !p.IsDelete);
+
+            entity.IsDelete = true;
+
+            await _context.SaveChangesAsync();
+            res.Code = 100;
+            res.Message = "删除成功";
+            return Json(res);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Add(int goodsId,int shopId,decimal price)
+        {
+            var res = new ResultModel();
+
+            var isAdd = await _context.GoodsPrices.AnyAsync(p => p.ShopId == shopId && p.GoodsId == goodsId);
+
+            if (isAdd)
+            {
+                res.Code = 0;
+                res.Message = "店铺价格已存在，请勿重复添加";
+                return Json(res);
+            }
+
+            var entity = new GoodsPrice
+            {
+                ShopId = shopId,
+                Price = price,
+                GoodsId = goodsId,
+                IsDelete = false
+            };
+
+            _context.Add(entity);
+
+            await _context.SaveChangesAsync();
+            res.Code = 100;
+            res.Message = "新增成功";
+            return Json(res);
+        }
     }
 }
