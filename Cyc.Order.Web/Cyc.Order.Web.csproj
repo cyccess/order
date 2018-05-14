@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.6" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.8" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.4" />
     <PackageReference Include="Sakura.AspNetCore.Mvc.PagedList" Version="2.0.12" />
     <PackageReference Include="Sakura.AspNetCore.PagedList" Version="2.0.2" />
     <PackageReference Include="Sakura.AspNetCore.PagedList.Async" Version="1.0.0" />

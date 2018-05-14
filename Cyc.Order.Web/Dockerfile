@@ -16,4 +16,4 @@ RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai  /etc/localtime
 ENTRYPOINT ["dotnet", "Cyc.Order.Web.dll"]
 
 #π“‘ÿ∆Ù∂Ø
-#docker run -itd --name psb -p 3399:3399 -v /root/wwwroot/psb:/publish  microsoft/aspnetcore:2.0 dotnet /publish/Cyc.Order.Web.dll
+#docker run -itd --name orderweb -p 8801:8801 -v /root/wwwroot/www.cqsnps.vip:/publish -w /publish/ microsoft/aspnetcore dotnet /publish/Cyc.Order.Web.dll

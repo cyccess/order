@@ -19,7 +19,9 @@ namespace Cyc.Order.Web
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .Build();
+            .UseKestrel()
+            .UseUrls("http://*:8801")
+            .UseStartup<Startup>()
+            .Build();
     }
 }
