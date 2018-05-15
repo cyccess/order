@@ -6,7 +6,6 @@ using Cyc.Order.Data;
 using Cyc.Order.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Sakura.AspNetCore;
 
 namespace Cyc.Order.Web.Controllers
 {
@@ -19,7 +18,7 @@ namespace Cyc.Order.Web.Controllers
             _context = context;
         }
 
-
+        [Route("/api/Order")]
         public async Task<IActionResult> Index(int status = 0, int page = 1)
         {
             int[] s = { 1, 10, 99 };
@@ -60,7 +59,7 @@ namespace Cyc.Order.Web.Controllers
             return Json(res);
         }
 
-
+        [Route("/api/Order/Details")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -89,6 +88,7 @@ namespace Cyc.Order.Web.Controllers
             return Json(res);
         }
 
+        [Route("/api/Order/CancelOrder")]
         [HttpPost, ActionName("CancelOrder")]
         public async Task<IActionResult> CancelOrder(int id)
         {
@@ -101,6 +101,7 @@ namespace Cyc.Order.Web.Controllers
 
 
         //确认订单
+        [Route("/api/Order/OrderConfirm")]
         [HttpPost]
         public async Task<IActionResult> OrderConfirm(int oid)
         {
@@ -122,6 +123,7 @@ namespace Cyc.Order.Web.Controllers
         }
 
         //提交订单
+        [Route("/api/Order/SubmitOrder")]
         [HttpPost]
         public async Task<IActionResult> SubmitOrder(int oid)
         {

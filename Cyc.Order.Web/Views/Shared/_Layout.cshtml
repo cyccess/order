@@ -36,31 +36,33 @@
             -->
             <div class="sidebar-wrapper">
                 <div class="logo">
-                    <a href="http://www.creative-tim.com" class="simple-text">
-                        Creative Tim
+                    <a href="" class="simple-text">
+                        Order System
                     </a>
                 </div>
                 <ul class="nav">
-
-                    <li>
-                        <a asp-controller="Trade" asp-action="Index">
+                    @{ 
+                        var ctl = ViewContext.RouteData.Values["controller"].ToString();
+                    }
+                    <li class="@(ctl == "Trade" ? "active" : "")">
+                        <a asp-controller="Trade" asp-action="Index" >
                             <i class="pe-7s-note2"></i>
                             <p>发货订单</p>
                         </a>
                     </li>
-                    <li>
+                    <li class="@(ctl == "Goods" ? "active" : "")">
                         <a asp-controller="Goods" asp-action="Index">
                             <i class="pe-7s-shopbag"></i>
                             <p>商品管理</p>
                         </a>
                     </li>
-                    <li>
+                    <li class="@(ctl == "Price" ? "active" : "")">
                         <a asp-controller="Price" asp-action="Index">
                             <i class="pe-7s-cash"></i>
                             <p>价格管理</p>
                         </a>
                     </li>
-                    <li>
+                    <li class="@(ctl == "Shops" ? "active" : "")">
                         <a href="/Shops">
                             <i class="pe-7s-map-marker"></i>
                             <p>门店管理</p>

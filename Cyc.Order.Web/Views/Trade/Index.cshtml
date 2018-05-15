@@ -123,7 +123,7 @@
                     confirmButtonText: '确定发货',
                     cancelButtonText: '取消'
                 }).then(function () {
-                    $.post("/OrderRecords/Delivery", { id: id }, function (data) {
+                    $.post("/api/Order/Delivery", { id: id }, function (data) {
                         swal('确认发货!', data.message, 'success').then(function () {
                             location.reload();
                         });
@@ -142,7 +142,7 @@
                     confirmButtonText: '确定取消',
                     cancelButtonText: '取消'
                 }).then(function () {
-                    $.post("/OrderRecords/CancelOrder", { id: id }, function (data) {
+                    $.post("/api/Order/CancelOrder", { id: id }, function (data) {
                         swal('订单取消!', data.message, 'success').then(function () {
                             location.reload();
                         });

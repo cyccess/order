@@ -23,7 +23,7 @@
     data() {
       return {
         list: [
-          {icon: 'icon-home', title: '首页', link: '/Home', selected: false, badge: 0},
+          {icon: 'icon-home', title: '首页', link: '/', selected: false, badge: 0},
           {icon: 'icon-goods', title: '商品', link: '/list', selected: false, badge: 0},
           {icon: 'icon-cart', title: '购物车', link: '/shoppingCart', selected: false, badge: 0},
           {icon: 'icon-my', title: '我的订单', link: '/myOrder', selected: false, badge: 0},

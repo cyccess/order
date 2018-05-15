@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cyc.Order.Web.Controllers
 {
+    [Route("/api/[controller]")]
     public class ShoppingCartController : BaseController
     {
         private readonly OrderDbContext _context;
@@ -19,6 +20,7 @@ namespace Cyc.Order.Web.Controllers
             _context = context;
         }
 
+        [Route("/api/ShoppingCart")]
         public async Task<IActionResult> Index()
         {
             ShoppingCartViewModel shoppingCart = await Cart();
@@ -29,6 +31,7 @@ namespace Cyc.Order.Web.Controllers
         }
 
         // 更新购物车数量
+        [Route("/api/ShoppingCart/Quantity")]
         [HttpPost]
         public async Task<IActionResult> Quantity(int id, int num = 1)
         {
@@ -43,6 +46,7 @@ namespace Cyc.Order.Web.Controllers
         }
 
         // 选择购物车商品
+        [Route("/api/ShoppingCart/CartGoodsSelected")]
         [HttpPost]
         public async Task<IActionResult> CartGoodsSelected(int id, bool checkedAll = false)
         {
@@ -66,7 +70,7 @@ namespace Cyc.Order.Web.Controllers
         }
 
         // 删除商品
-
+        [Route("/api/ShoppingCart/Remove")]
         public async Task<IActionResult> Remove(int id)
         {
             var entity = await _context.Carts.FindAsync(id);
@@ -84,6 +88,7 @@ namespace Cyc.Order.Web.Controllers
         }
 
         // 加入购物车
+        [Route("/api/ShoppingCart/AddCart")]
         [HttpPost]
         public async Task<IActionResult> AddCart(int? goodsId)
         {
@@ -125,6 +130,7 @@ namespace Cyc.Order.Web.Controllers
         }
 
         //预下单
+        [Route("/api/ShoppingCart/PreOrder")]
         [HttpPost]
         public async Task<IActionResult> PreOrder([FromBody] ProOrderViewModel model)
         {

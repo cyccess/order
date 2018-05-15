@@ -22,7 +22,6 @@ namespace Cyc.Order.Web.Controllers
             _context = context;
         }
 
-
         public IActionResult Index()
         {
             return View();
@@ -80,7 +79,7 @@ namespace Cyc.Order.Web.Controllers
             }
         }
 
-        [Route("/Account/Login")]
+        [Route("/api/Account/Login")]
         [HttpPost]
         public async Task<IActionResult> AccountLogin(LoginViewModel model)
         {

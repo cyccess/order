@@ -63,6 +63,8 @@ namespace Cyc.Order.Web
 
             app.UseStaticFiles();
 
+          
+
             // 验证中间件
             app.UseAuthentication();
 

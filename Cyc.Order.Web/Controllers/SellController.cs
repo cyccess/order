@@ -11,7 +11,6 @@ using Sakura.AspNetCore;
 
 namespace Cyc.Order.Web.Controllers
 {
-    //[Authorize(Roles = "admin,system")]
     public class SellController : BaseController
     {
         private readonly OrderDbContext _context;
@@ -21,7 +20,7 @@ namespace Cyc.Order.Web.Controllers
             _context = context;
         }
 
-        [Route("/Sell/List")]
+        [Route("/api/Sell/List")]
         public async Task<IActionResult> Index(int page = 1, int brandId = 0)
         {
             var query = _context.Goods
@@ -70,6 +69,7 @@ namespace Cyc.Order.Web.Controllers
             return Json(res);
         }
 
+        [Route("/api/Sell/Details")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)

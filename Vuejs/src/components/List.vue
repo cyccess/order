@@ -35,6 +35,7 @@
 
 <script>
   import Toolbar from '@/components/Toolbar.vue'
+
   export default {
     components: {
       Toolbar,
@@ -87,8 +88,8 @@
           });
         }
       },
-      onDetailClick(id){
-        this.$router.push({path:"/detail",query:{id:id}});
+      onDetailClick(id) {
+        this.$router.push({path: "/detail", query: {id: id}});
       }
     }
   }
@@ -109,7 +110,7 @@
   }
 
   .searchlist-normal .normal-list .list-body {
-    display: -webkit-box;
+    display: flex;
     padding-bottom: 1rem;
   }
 
@@ -128,8 +129,7 @@
   }
 
   .searchlist-normal .normal-list .list-body .product-info-box {
-    -webkit-box-flex: 1;
-    box-flex: 1;
+    flex: 1;
     margin-left: 10px;
     position: relative;
     height: 100%;
@@ -149,13 +149,13 @@
     right: auto;
     bottom: -4px;
     background-color: #e3e5e9;
-    border: 0px solid transparent;
-    border-radius: 0px;
-    -webkit-border-radius: 0px;
+    border: 0 solid transparent;
+    border-radius: 0;
+    -webkit-border-radius: 0;
     transform: scale(0.5);
     -webkit-transform: scale(0.5);
     transform-origin: top left;
-    -webkit-transform-origin: top left
+    -webkit-transform-origin: top left;
   }
 
   .searchlist-normal .normal-list .list-body .product-info-box .product-name {
@@ -177,15 +177,14 @@
 
   .searchlist-normal .normal-list .list-body .product-info-box .gray-icon {
     height: 29px;
-    margin: 0px;
+    margin: 0;
     overflow: hidden;
     line-height: 29px
   }
 
   .searchlist-normal .normal-list .list-body .product-info-box .product-price-m {
-    -webkit-box-flex: 1;
-    box-flex: 1;
-    font-size: 0px;
+    flex: 1;
+    font-size: 0;
     line-height: 40px;
     overflow: hidden;
     margin-right: 10px
@@ -207,9 +206,9 @@
   }
 
   .product-buy {
-    display: -webkit-box;
+    display: flex;
     height: 100%;
-    font-size: 0px;
+    font-size: 0;
   }
 
   .product-buy .icon-gouwuche {
