@@ -99,7 +99,7 @@ namespace Cyc.Order.Web.Controllers
             {
                 res.Code = 100;
                 res.Message = "登录成功";
-                res.Data = new { id = entity.Id, username = entity.Name, userType = entity.UserType };
+                res.Data = new { id = entity.Id, username = entity.Phone, userType = entity.UserType };
             }
             else
             {

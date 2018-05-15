@@ -127,7 +127,18 @@
       go(oid) {
         this.$router.push({path: "/orderDetail", query: {oid: oid}});
       }
-    }
+    },
+    beforeRouteEnter (to, from, next) {
+      next(vm=>{
+        let usertype =  vm.$cookies.get("cx_usertype");
+        if(usertype){
+          usertype = Number(usertype);
+          if(usertype === 1){
+            vm.$router.replace({path:"/order/list"})
+          }
+        }
+      })
+    },
   }
 </script>
 

@@ -37,13 +37,13 @@
       }
     },
     created(){
-      let usertype =  this.$cookies.get("cx_usertype");
-      if(usertype){
-        this.userType = Number(usertype);
-        if(this.userType === 1){
-          this.list[3].link = '/order/list';
-        }
-      }
+      // let usertype =  this.$cookies.get("cx_usertype");
+      // if(usertype){
+      //   this.userType = Number(usertype);
+      //   if(this.userType === 1){
+      //     this.list[3].link = '/order/list';
+      //   }
+      // }
     }
   }
 </script>
