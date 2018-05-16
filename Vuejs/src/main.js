@@ -72,22 +72,16 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.name === "login") {
-    window.document.title = to.meta.title;
-    next();
+  let sid = VueCookies.get("cx_sid");
+  if (to.meta.requiresAuth && !sid) {
+    next({
+      path: '/login',
+      query: {redirect: to.fullPath}
+    });
   }
   else {
-    let sid = VueCookies.get("cx_sid");
-    if (to.meta.requiresAuth && !sid) {
-      next({
-        path: '/login',
-        query: { redirect: to.fullPath }
-      });
-    }
-    else {
-      window.document.title = to.meta.title;
-      next();
-    }
+    window.document.title = to.meta.title;
+    next();
   }
 });
 

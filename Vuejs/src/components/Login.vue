@@ -27,46 +27,60 @@
 
 <script>
   export default {
-    beforeRouteEnter(to, from, next){
-      next(vm=>{
-       vm.redirect = vm.$route.query.redirect;
+    beforeRouteEnter(to, from, next) {
+      next(vm => {
+        vm.redirect = vm.$route.query.redirect;
       })
     },
     data() {
       return {
-        username:'',
-        password:'',
-        redirect:''
+        username: '',
+        password: '',
+        redirect: ''
       }
     },
-    computed:{
-      isSubmit:function () {
+    computed: {
+      isSubmit: function () {
         return !!(this.username && this.password);
       }
     },
-    methods:{
-      async login(){
-        if(!this.isSubmit) return false;
+    methods: {
+      async login() {
+        if (!this.isSubmit) return false;
         let data = {
-          UserName:this.username,
-          Password:this.password
+          UserName: this.username,
+          Password: this.password
         };
         let res = await this.$http.post('/api/Account/Login', data);
-        if(res.code === 100){
-          this.$cookies.set("cx_sid",res.data.id, -1);
-          this.$cookies.set("cx_username",res.data.username, -1);
-          this.$cookies.set('cx_usertype',res.data.userType, -1);
+        if (res.code === 100) {
+          this.$cookies.set("cx_sid", res.data.id, -1);
+          this.$cookies.set("cx_username", res.data.username, -1);
+          this.$cookies.set('cx_usertype', res.data.userType, -1);
 
-          console.log("redirect:"+this.redirect)
-          if(this.redirect){
-            this.$router.push({path:this.redirect});
+          console.log("redirect:" + this.redirect);
+          this.redirectTo(this.redirect, res.data.userType);
+        }
+        else {
+          this.$vux.toast.text(res.message);
+        }
+      },
+      redirectTo(path, userType) {
+        if (!path) {
+          this.$router.push({path: "/list"});
+          return;
+        }
+
+        path = path.toLowerCase();
+        if (path.indexOf('/order/list') > -1 || path.indexOf('/myorder') > -1) {
+          if (userType === 1) {
+            this.$router.push({path: "/order/list"});
           }
           else {
-            this.$router.push({path:"/list"});
+            this.$router.push({path: "/myorder"});
           }
         }
-        else{
-          this.$vux.toast.text(res.message);
+        else {
+          this.$router.push({path: path});
         }
       }
     }
@@ -91,15 +105,17 @@
     padding-bottom: 1rem;
     text-align: center;
   }
-  .m-logoIcon{
+
+  .m-logoIcon {
     margin: 1rem 0;
   }
-  .m-logoIcon .icon{
+
+  .m-logoIcon .icon {
     font-size: 4rem;
     line-height: 4rem;
   }
 
-  .m-logoTxt{
+  .m-logoTxt {
     font-size: 1.2rem;
   }
 

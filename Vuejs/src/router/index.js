@@ -2,6 +2,7 @@ import Login from '@/components/Login'
 import MyOrder from '@/components/MyOrder'
 import OrderDetail from '@/components/OrderDetails'
 import Home from '@/components/Home'
+import Category from '@/components/Category'
 import List from '@/components/List'
 import Detail from '@/components/Detail'
 import ShoppingCart from '@/components/ShoppingCart'
@@ -22,6 +23,12 @@ export default [
     name: 'home',
     component: Home,
     meta: {title: '首页'}
+  },
+  {
+    path: '/category',
+    name: 'category',
+    component: Category,
+    meta: {title: '分类'}
   },
   {
     path: '/myOrder',
@@ -73,7 +80,7 @@ export default [
       {
         path: 'list',
         component: resolve => require(['@/components/trade/List.vue'], resolve),
-        meta: {title: '订单列表', requiresAuth: true}
+        meta: {title: '我的订单', requiresAuth: true, keepAlive: true}
       },
       {
         path: 'detail',

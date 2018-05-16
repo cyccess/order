@@ -1,7 +1,7 @@
 <template>
 <div>
   <tab>
-    <tab-item selected @on-item-click="chooseTab(0)">全部</tab-item>
+    <tab-item selected @on-item-click="chooseTab(0)">全部订单</tab-item>
     <tab-item @on-item-click="chooseTab(1)">待收货</tab-item>
     <tab-item @on-item-click="chooseTab(10)">已完成</tab-item>
     <tab-item @on-item-click="chooseTab(99)">已取消</tab-item>
@@ -48,7 +48,6 @@
       </div>
     </scroller>
   </div>
-
   <toolbar :selected="3"></toolbar>
 </div>
 </template>
@@ -127,18 +126,7 @@
       go(oid) {
         this.$router.push({path: "/orderDetail", query: {oid: oid}});
       }
-    },
-    beforeRouteEnter (to, from, next) {
-      next(vm=>{
-        let usertype =  vm.$cookies.get("cx_usertype");
-        if(usertype){
-          usertype = Number(usertype);
-          if(usertype === 1){
-            vm.$router.replace({path:"/order/list"})
-          }
-        }
-      })
-    },
+    }
   }
 </script>
 
