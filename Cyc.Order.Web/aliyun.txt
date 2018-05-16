@@ -3,6 +3,10 @@
 
 435400
 
+// aliyun.com 
 250387603@qq.com
-
 niming666
+
+// 服务器账户密码
+root
+crp1230.
