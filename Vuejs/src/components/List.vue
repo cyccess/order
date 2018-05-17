@@ -28,21 +28,16 @@
         </li>
       </ul>
     </scroller>
-
-    <toolbar :selected="1"></toolbar>
   </div>
 </template>
 
 <script>
-  import Toolbar from '@/components/Toolbar.vue'
-
   export default {
-    components: {
-      Toolbar,
-    },
+
     data() {
       return {
         list: [],
+        brandId: 0,
         page: 0,
         noData: ''
       }
@@ -62,9 +57,9 @@
           done();
           return;
         }
-
+        this.brandId = this.$route.query.brandId || 0;
         this.page += 1;
-        let res = await this.$http.post('/api/Sell/List', {page: this.page});
+        let res = await this.$http.post('/api/Sell/List', {page: this.page, brandId: this.brandId});
 
         if (res.code === 100) {
           if (res.data.length < 10) {
@@ -72,13 +67,14 @@
           }
 
           this.list = [...this.list, ...res.data];
+          done()
         }
         else {
           if (this.list.length === 0) {
             this.noData = "暂无数据";
           }
+          done(true);
         }
-        done();
       },
       async addToCart(goodsId) {
         let res = await this.$http.post('/api/shoppingCart/AddCart', {goodsId: goodsId});
@@ -97,7 +93,12 @@
 
 <style scoped>
   .sell-goods-list {
-
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #fff;
   }
 
   .searchlist-normal {

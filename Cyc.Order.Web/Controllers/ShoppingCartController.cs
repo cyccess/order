@@ -10,7 +10,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cyc.Order.Web.Controllers
 {
-    [Route("/api/[controller]")]
     public class ShoppingCartController : BaseController
     {
         private readonly OrderDbContext _context;

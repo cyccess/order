@@ -15,6 +15,9 @@ namespace Cyc.Order.Data.DataModel
 
         [Column("name")]
         public string Name { get; set; }
+
+        [Column("logo")]
+        public string Logo { get; set; }
     }
 
 }

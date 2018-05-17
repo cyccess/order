@@ -24,7 +24,7 @@
       return {
         list: [
           {icon: 'icon-home', title: '首页', link: '/', selected: false, badge: 0},
-          {icon: 'icon-goods', title: '分类', link: '/list', selected: false, badge: 0},
+          {icon: 'icon-cate', title: '分类', link: '/category', selected: false, badge: 0},
           {icon: 'icon-cart', title: '购物车', link: '/shoppingCart', selected: false, badge: 0},
           {icon: 'icon-my', title: '我的订单', link: '/myOrder', selected: false, badge: 0},
         ],

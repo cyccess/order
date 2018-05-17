@@ -11,6 +11,7 @@ using Sakura.AspNetCore;
 
 namespace Cyc.Order.Web.Controllers
 {
+    [Route("api")]
     public class SellController : BaseController
     {
         private readonly OrderDbContext _context;
@@ -20,7 +21,7 @@ namespace Cyc.Order.Web.Controllers
             _context = context;
         }
 
-        [Route("/api/Sell/List")]
+        [Route("Sell/List")]
         public async Task<IActionResult> Index(int page = 1, int brandId = 0)
         {
             var query = _context.Goods
@@ -69,7 +70,7 @@ namespace Cyc.Order.Web.Controllers
             return Json(res);
         }
 
-        [Route("/api/Sell/Details")]
+        [Route("Sell/Details")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -104,6 +105,16 @@ namespace Cyc.Order.Web.Controllers
                 Data = model
             };
             return Json(res);
+        }
+
+        [HttpPost("GetCategory")]
+        public async Task<IActionResult> GetCategory()
+        {
+            var list = await _context.Brands.ToListAsync();
+            var model = new ResultModel();
+            model.Code = 100;
+            model.Data = list;
+            return Json(model);
         }
     }
 }

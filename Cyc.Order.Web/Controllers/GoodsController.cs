@@ -45,7 +45,7 @@ namespace Cyc.Order.Web.Controllers
 
             }
             var viewModel = new GoodsViewModel();
-            viewModel.Goods = await query.ToPagedListAsync(20, page);
+            viewModel.Goods = await query.OrderByDescending(g => g.AddTime).ToPagedListAsync(20, page);
             viewModel.Brands = await _context.Brands.ToListAsync();
             viewModel.GoodsName = goodsName;
             viewModel.BrandId = brandId;
