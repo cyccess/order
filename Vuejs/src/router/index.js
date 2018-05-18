@@ -23,13 +23,13 @@ export default [
     path: '/',
     name: 'home',
     component: Home,
-    meta: {title: '首页'}
+    meta: {title: '首页', keepAlive: true}
   },
   {
     path: '/category',
     name: 'category',
     component: Category,
-    meta: {title: '分类'}
+    meta: {title: '分类', keepAlive: true}
   },
   {
     path: '/my',
