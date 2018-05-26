@@ -77,6 +77,12 @@
         }
       },
       async addToCart(goodsId) {
+        let sid = this.$cookies.get("cx_sid");
+        if(!sid){
+          this.$router.push({path: "/login",  query: {redirect: this.$route.fullPath}});
+          return;
+        }
+
         let res = await this.$http.post('/api/shoppingCart/AddCart', {goodsId: goodsId});
         if (res.code === 100) {
           this.$vux.toast.show({

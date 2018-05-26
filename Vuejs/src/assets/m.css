@@ -22,7 +22,9 @@ li{list-style: none;}
   border-radius: 4px;
   overflow: hidden;
 }
-
+.vux-cell-box .weui-cell{
+  padding: 0;
+}
 
 
 

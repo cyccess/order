@@ -1,14 +1,17 @@
 ﻿using Cyc.Order.Data;
+using Cyc.Order.Data.DataModel;
 using Cyc.Order.Web.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Cyc.Order.Web.Controllers
@@ -99,7 +102,7 @@ namespace Cyc.Order.Web.Controllers
             {
                 res.Code = 100;
                 res.Message = "登录成功";
-                res.Data = new { id = entity.Id, username = entity.Phone, userType = entity.UserType };
+                res.Data = new { id = entity.Id, username = entity.Phone, userType = entity.UserType, name = entity.Name };
             }
             else
             {
@@ -108,6 +111,54 @@ namespace Cyc.Order.Web.Controllers
             }
 
             return Json(res);
+        }
+
+        [Route("/api/Account/Register")]
+        [HttpPost]
+        public async Task<IActionResult> AccountRegister(LoginViewModel model)
+        {
+            var res = new ResultModel();
+
+            if (!Validate(model.UserName))
+            {
+                res.Code = 102;
+                res.Message = "请输入正确的手机号";
+                return Json(res);
+            }
+
+            var checkPhone = await _context.Shops.AnyAsync(s => s.Phone == model.UserName);
+
+            if (checkPhone)
+            {
+                res.Code = 103;
+                res.Message = "手机号已存在";
+                return Json(res);
+            }
+
+            var password = Utils.MD5Encrypt(model.Password);
+
+            var shop = new Shop
+            {
+                Phone = model.UserName,
+                Password = password,
+                UserType = 0,
+                IsDelete = false,
+                AddDate = DateTime.Now
+            };
+
+            await _context.AddAsync(shop);
+            await _context.SaveChangesAsync();
+
+            res.Code = 100;
+            res.Message = "注册成功";
+            res.Data = new { id = shop.Id, username = shop.Phone, userType = shop.UserType, name = "" };
+
+            return Json(res);
+        }
+
+        private bool Validate(string name)
+        {
+            return Regex.IsMatch(name, @"^[1][3,4,5,6,7,8,9][0-9]{9}$");
         }
 
 

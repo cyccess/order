@@ -23,7 +23,7 @@
           {icon: 'icon-home', title: '首页', link: '/', selected: false, badge: 0},
           {icon: 'icon-cate', title: '分类', link: '/category', selected: false, badge: 0},
           {icon: 'icon-cart', title: '购物车', link: '/shoppingCart', selected: false, badge: 0},
-          {icon: 'icon-my', title: '我的订单', link: '/myOrder', selected: false, badge: 0},
+          {icon: 'icon-my', title: '我的', link: '/my', selected: false, badge: 0},
         ],
         userType: 0,
       }
@@ -33,7 +33,7 @@
       if (usertype) {
         usertype = Number(usertype);
         if (usertype === 1) {
-          this.list[3].link = '/order/list';
+          // this.list[3].link = '/order/list';
         }
       }
     },

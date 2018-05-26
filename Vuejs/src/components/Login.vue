@@ -21,6 +21,11 @@
       <div class="loginbox">
         <button @click="login" :class="['loginBtn',isSubmit ? '': 'disabled']">登录</button>
       </div>
+      <div class="phoneReg">
+        <router-link to="/register">
+          手机号快捷注册&gt;
+        </router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -56,6 +61,7 @@
           this.$cookies.set("cx_sid", res.data.id, -1);
           this.$cookies.set("cx_username", res.data.username, -1);
           this.$cookies.set('cx_usertype', res.data.userType, -1);
+          this.$cookies.set('cx_info', res.data.name, -1);
 
           console.log("redirect:" + this.redirect);
           this.redirectTo(this.redirect, res.data.userType);
@@ -76,7 +82,7 @@
             this.$router.push({path: "/order/list"});
           }
           else {
-            this.$router.push({path: "/myorder"});
+            this.$router.push({path: "/my"});
           }
         }
         else {
@@ -87,7 +93,7 @@
   }
 </script>
 
-<style scoped>
+<style scoped lang="less">
 
   .login-wrap {
     position: absolute;
@@ -166,6 +172,15 @@
 
   .loginbox .loginBtn.disabled {
     color: #ccc;
+  }
+
+  .phoneReg{
+    text-align: center;
+    font-size: .875rem;
+
+    a{
+      color:#666;
+    }
   }
 
 </style>

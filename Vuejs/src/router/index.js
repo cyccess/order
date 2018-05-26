@@ -1,23 +1,29 @@
 import Login from '@/components/Login'
+import Register from '@/components/Register'
 import MyOrder from '@/components/MyOrder'
 import OrderDetail from '@/components/OrderDetails'
 import Home from '@/components/Home'
 import Category from '@/components/Category'
 import My from '@/components/My'
+import Info from '@/components/Info'
 import List from '@/components/List'
 import Detail from '@/components/Detail'
 import ShoppingCart from '@/components/ShoppingCart'
 import OrderConfirm from '@/components/OrderConfirm'
 import SubmitOrderSuccess from '@/components/SubmitOrderSuccess'
 
-
 export default [
-
   {
     path: '/login',
     name: 'login',
     component: Login,
     meta: {title: '用户登录'}
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: Register,
+    meta: {title: '手机号注册'}
   },
   {
     path: '/',
@@ -35,7 +41,13 @@ export default [
     path: '/my',
     name: 'my',
     component: My,
-    meta: {title: '个人中心'}
+    meta: {title: '个人中心', requiresAuth: true}
+  },
+  {
+    path: '/info',
+    name: 'info',
+    component: Info,
+    meta: {title: '基本信息', requiresAuth: true}
   },
   {
     path: '/myOrder',
