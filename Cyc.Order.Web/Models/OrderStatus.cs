@@ -8,7 +8,7 @@ namespace Cyc.Order.Web.Models
     /// <summary>
     /// 订单状态
     /// </summary>
-    public enum OrderStatus
+    public enum OrderStatus : Int32
     {
         Default = 0,
 

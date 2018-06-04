@@ -2,15 +2,17 @@
 using Cyc.Order.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Sakura.AspNetCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Cyc.Order.Web.Controllers
 {
-   
+
     public class TradeController : Controller
     {
         private readonly OrderDbContext _context;
@@ -174,6 +176,67 @@ namespace Cyc.Order.Web.Controllers
             orderRecord.Status = (int)OrderStatus.Cancel;
             await _context.SaveChangesAsync();
             return Json(new { code = 100, message = "订单取消成功" });
+        }
+
+
+        [Authorize(Roles = "admin,system")]
+        public async Task<IActionResult> Sales(string shopName, string billDate, int id = 1)
+        {
+            var currentDate = DateTime.Now.AddMonths(-1);
+
+            if (string.IsNullOrEmpty(billDate))
+            {
+                billDate = currentDate.ToString("yyyy-MM-dd");
+            }
+
+            var tempDate = DateTime.Parse(billDate);
+            var fristDate = tempDate.AddDays(1 - DateTime.Now.Day).Date; //当月第一天
+            var lastDate = tempDate.AddDays(1 - DateTime.Now.Day).Date.AddMonths(1).AddSeconds(-1); // 当月最后一天
+
+            var beginDate = new DateTime(2018, 1, 1);
+
+            List<SelectListItem> selectListItem = new List<SelectListItem>();
+
+            for (DateTime dt = beginDate; dt < currentDate; dt = dt.AddMonths(1))
+            {
+                selectListItem.Add(new SelectListItem
+                {
+                    Value = dt.ToString("yyyy-MM-dd"),
+                    Text = dt.ToString("yyyy年MM月")
+                });
+            }
+
+            var list = from o in _context.OrderRecords
+                       where o.Status == 10 && (o.OrderDate > fristDate && o.OrderDate < lastDate)
+                       group o by o.ShopId into g
+                       select new
+                       {
+                           ShopId = g.Key,
+                           SaleCount = g.Count(),
+                           TotalAmount = g.Sum(ta => ta.TotalAmount)
+                       };
+
+            var queryable = from s in _context.Shops
+                            join o in list on s.Id equals o.ShopId
+                            where 1 == 1 && (string.IsNullOrEmpty(shopName) || s.Name.StartsWith(shopName))
+                            select new ShopSaleViewModel
+                            {
+                                ShopName = s.Name,
+                                SaleCount = o.SaleCount,
+                                TotalAmount = o.TotalAmount
+                            };
+
+            var res = await queryable.ToListAsync();
+
+            var sales = new SalesViewModel()
+            {
+                ShopName = shopName,
+                BillDate = fristDate.ToString("yyyy-MM-dd"),
+                BillDateList = selectListItem,
+                ShopSales = res
+            };
+
+            return View(sales);
         }
     }
 }
