@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_MyLayout.cshtml";
 }
 <div class="cart-content">
-    @Html.Partial("_Cart", Model)
+    @await Html.PartialAsync("_Cart", Model)
 </div>
 
 @section Scripts{
