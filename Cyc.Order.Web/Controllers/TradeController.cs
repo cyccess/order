@@ -190,8 +190,8 @@ namespace Cyc.Order.Web.Controllers
             }
 
             var tempDate = DateTime.Parse(billDate);
-            var fristDate = tempDate.AddDays(1 - DateTime.Now.Day).Date; //当月第一天
-            var lastDate = tempDate.AddDays(1 - DateTime.Now.Day).Date.AddMonths(1).AddSeconds(-1); // 当月最后一天
+            var fristDate = new DateTime(tempDate.Year, tempDate.Month, 1); //当月第一天
+            var lastDate = fristDate.AddMonths(1).AddDays(-1); // 当月最后一天
 
             var beginDate = new DateTime(2018, 1, 1);
 
@@ -212,7 +212,7 @@ namespace Cyc.Order.Web.Controllers
                        select new
                        {
                            ShopId = g.Key,
-                           SaleCount = g.Count(),
+                           SaleCount = g.Sum(sc => sc.Num),
                            TotalAmount = g.Sum(ta => ta.TotalAmount)
                        };
 
@@ -221,6 +221,7 @@ namespace Cyc.Order.Web.Controllers
                             where 1 == 1 && (string.IsNullOrEmpty(shopName) || s.Name.StartsWith(shopName))
                             select new ShopSaleViewModel
                             {
+                                ShopId = s.Id,
                                 ShopName = s.Name,
                                 SaleCount = o.SaleCount,
                                 TotalAmount = o.TotalAmount
@@ -237,6 +238,42 @@ namespace Cyc.Order.Web.Controllers
             };
 
             return View(sales);
+        }
+
+        [Authorize(Roles = "admin,system")]
+        public async Task<IActionResult> SaleDetail(int shopId, string billDate, string goodsName)
+        {
+            var tempDate = DateTime.Parse(billDate);
+            var fristDate = tempDate.AddDays(1 - DateTime.Now.Day).Date; //当月第一天
+            var lastDate = tempDate.AddDays(1 - DateTime.Now.Day).Date.AddMonths(1).AddSeconds(-1); // 当月最后一天
+
+            var queryableOrder = from o in _context.OrderRecords
+                                 where o.ShopId == shopId && o.Status == 10 && (o.OrderDate > fristDate && o.OrderDate < lastDate)
+                                 select o.Id;
+
+            var orderIds = await queryableOrder.ToArrayAsync();
+
+            var queryableGoods = from o in _context.OrderRecordDetails
+                                 where orderIds.Contains(o.OrderId)
+                                 && (string.IsNullOrEmpty(goodsName) || o.Name.StartsWith(goodsName))
+                                 group o by new { o.GoodsId, o.Name } into g
+                                 select new SaleDetailRow
+                                 {
+                                     GoodsId = g.Key.GoodsId,
+                                     GoodsName = g.Key.Name,
+                                     SaleCount = g.Sum(sc => sc.Num),
+                                     TotalAmount = g.Sum(ta => ta.Num * ta.Price)
+                                 };
+
+            var model = new SaleDetailViewModel
+            {
+                BillDate = billDate,
+                ShopId = shopId,
+                GoodsName = goodsName,
+                SaleDetailRows = await queryableGoods.ToListAsync()
+            };
+
+            return View(model);
         }
     }
 }

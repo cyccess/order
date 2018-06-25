@@ -44,7 +44,7 @@
                            <td>@item.ShopName</td>
                            <td>@item.SaleCount</td>
                            <td>@item.TotalAmount</td>
-                           <td><a href="#">详情</a></td>
+                           <td><a asp-controller="Trade" asp-action="SaleDetail" asp-route-shopId="@item.ShopId" asp-route-billDate="@Model.BillDate">详情</a></td>
                        </tr>
                    }
                 </tbody>

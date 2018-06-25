@@ -13,11 +13,19 @@ namespace Cyc.Order.Data.DataModel
         [Column("id")]
         public int Id { get; set; }
 
+        [Required]
         [Column("name")]
         public string Name { get; set; }
 
+        [Required]
         [Column("logo")]
         public string Logo { get; set; }
+
+        [Column("add_time")]
+        public DateTime AddTime { get; set; }
+
+        [Column("is_delete")]
+        public bool IsDelete { get; set; }
     }
 
 }

@@ -209,7 +209,7 @@ namespace Cyc.Order.Web.Controllers
                     continue;
                 }
 
-                model = priceList.FirstOrDefault(p => p.GoodsId == item.GoodsId && item.ShopId == 0);
+                model = priceList.FirstOrDefault(p => p.GoodsId == item.GoodsId && p.ShopId == 0);
 
                 if (model != null)
                 {

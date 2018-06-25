@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 
 namespace Cyc.Order.Web.Models
 {
-    public class ShopSaleViewModel
+    public class SaleDetailRow
     {
-        public int ShopId { get; set; }
-        public string ShopName { get; set; }
+        public int GoodsId { get; set; }
+
+        public string GoodsName { get; set; }
 
         public int SaleCount { get; set; }
 

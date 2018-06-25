@@ -13,6 +13,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Cyc.Order.Web.Controllers
 {
@@ -25,12 +26,41 @@ namespace Cyc.Order.Web.Controllers
             _context = context;
         }
 
+        [Authorize(Roles = "admin,system")]
         public IActionResult Index()
         {
-            return View();
+            DashboardViewModel model = new DashboardViewModel();
+
+            model.AwaitOrderCount = _context.OrderRecords.Count(o => o.Status == 1);
+            model.SentOrderCount = _context.OrderRecords.Count(o => o.Status == 10);
+
+            var curentDate = DateTime.Now;
+            var fristDate = curentDate.AddDays(1 - DateTime.Now.Day).Date; //当月第一天
+            var lastDate = curentDate.AddDays(1 - DateTime.Now.Day).Date.AddMonths(1).AddSeconds(-1); // 当月最后一天
+
+            model.CurrentMonthOrderCount = _context.OrderRecords
+                .Where(o => o.OrderDate > fristDate && o.OrderDate < lastDate)
+                .Count();
+
+            model.TotalOrderCount = _context.OrderRecords.Count();
+            model.ShopCount = _context.Shops.Count(s => !s.IsDelete);
+            model.GoodsCount = _context.Goods.Count(g => !g.IsDelete);
+
+            //var orderData = from o in _context.OrderRecords
+            //                where (o.OrderDate > fristDate.AddMonths(-6) && o.OrderDate < lastDate)
+            //                group o by new { o.OrderDate.Year, o.OrderDate.Month } into g
+            //                select new
+            //                {
+            //                    x = $"{g.Key.Year}年{g.Key.Month}月",
+            //                    y = g.Count()
+            //                };
+
+            //model.OrderData = JsonConvert.SerializeObject(orderData.ToList());
+
+            return View(model);
         }
 
-        [AllowAnonymous]
+        [AllowAnonymous] // 跳过权限验证
         [HttpGet("login")]
         public IActionResult Login(string returnUrl = null)
         {

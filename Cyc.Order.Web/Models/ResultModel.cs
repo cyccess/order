@@ -7,6 +7,11 @@ namespace Cyc.Order.Web.Models
 {
     public class ResultModel
     {
+        public ResultModel(int code = 100)
+        {
+            Code = code;
+        }
+
         public int Code { get; set; }
 
         public string Message { get; set; }

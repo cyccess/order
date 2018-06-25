@@ -7,8 +7,6 @@
         </div>
         <p class="weui-grid__label">{{item.name}}</p>
       </router-link>
-
-
     </div>
 
     <toolbar :selected="1"></toolbar>
@@ -33,10 +31,14 @@
         let res = await this.$http.post('/api/GetCategory');
         this.list = res.data;
 
+        this.list.forEach(item => {
+          item.logo = 'http://www.cqsnps.vip'+item.logo
+        });
+
         this.list.push({
           id:0,
           name:'所有品牌',
-          logo:'./static/img/cate/cate_00.png'
+          logo:'http://www.cqsnps.vip/images/brand/cate_00.png'
         })
       },
     }

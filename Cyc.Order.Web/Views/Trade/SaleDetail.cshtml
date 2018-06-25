@@ -1,0 +1,53 @@
+﻿@model SaleDetailViewModel
+@{
+    ViewData["Title"] = "销售统计";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card">
+    <div class="content">
+        <form asp-action="SaleDetail" class="form-inline" method="get">
+            <input type="hidden" asp-for="ShopId" />
+            <input type="hidden" asp-for="BillDate" />
+            <div class="form-group">
+                <label class="control-label">商品名称：</label>
+                <input class="form-control" asp-for="GoodsName">
+            </div>
+            <div class="form-group">
+                <button class="btn btn-info" type="submit"><i class="fa fa-search"></i>查询</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="content">
+        <div class="table-responsive">
+            <table class="table order-table">
+                <thead>
+                    <tr>
+                        <th>商品名称</th>
+                        <th>销售总量</th>
+                        <th>销售总额(元)</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.SaleDetailRows)
+                    {
+                        <tr>
+                            <td>@item.GoodsName</td>
+                            <td>@item.SaleCount</td>
+                            <td>@item.TotalAmount</td>
+                            <td></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div class="text-center">
+                <ul class="pagination"></ul>
+            </div>
+        </div>
+    </div>
+</div>

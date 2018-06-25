@@ -1,0 +1,76 @@
+﻿@model List<Brand>
+@{
+    ViewData["Title"] = "品牌管理";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<p>
+    <a asp-action="Create" class="btn btn-success">新增品牌</a>
+</p>
+<div class="card">
+    <div class="content">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        品牌LOGO
+                    </th>
+                    <th>
+                        名称
+                    </th>
+                    <th>
+                        添加时间
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <img src="http://@(Context.Request.Host.Value+item.Logo)" alt="" width="60" height="40" />
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @item.AddTime.ToString("yyyy-MM-dd")
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Id">修改</a> |
+                            <a class="delete" data-id="@item.Id" href="javascript:;">删除</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+@section Scripts{
+    <script>
+        $(function () {
+            $(".delete").on("click", function () {
+                var id = $(this).data("id");
+                swal({
+                    title: '确定删除吗？',
+                    text: "删除品牌后将无法恢复！",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '确定删除',
+                    cancelButtonText: '取消'
+                }).then(function () {
+                    $.post("/brand/delete", { id: id }, function (data) {
+                        var icon = data.code === 100 ? "success" : "warning";
+                        swal('删除!', data.message, icon).then(function () {
+                            location.reload();
+                        });
+                    });
+                }).catch(swal.noop);
+            });
+        })
+    </script>
+}

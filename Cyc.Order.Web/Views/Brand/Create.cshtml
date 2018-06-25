@@ -1,0 +1,80 @@
+﻿@model Cyc.Order.Data.DataModel.Brand
+@{
+    ViewData["Title"] = "添加品牌";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="card">
+    <div class="content">
+        <div class="row">
+            <div class="col-md-4 brand-form-new">
+                <form asp-action="Create">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Logo" class="control-label">品牌LOGO</label>
+
+                        <div class="img-wrapper">
+                            <div class="img-detail-con" style="display:none;">
+                                <img src="#" class="logo" alt="" width="120" height="80" />
+                            </div>
+
+                            <div class="img-upload-con">
+                                <div class="fileinput-button">
+                                    <button class="btn btn-warning">
+                                        <i class="fa fa-cloud-upload"></i>
+                                        <span>上传品牌LOGO</span>
+                                    </button>
+                                    <input id="fileupload" type="file" name="image" data-url="/brand/uploadlogo" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <input type="hidden" asp-for="Logo" class="form-control" />
+                        <span asp-validation-for="Logo" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label">品牌名称</label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="确定保存" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+    <a asp-action="Index">返回列表</a>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/assets/js/vendor/jquery.ui.widget.js"></script>
+    <script src="~/assets/js/jquery.iframe-transport.js"></script>
+    <script src="~/assets/js/jquery.fileupload.js"></script>
+    <script>
+        $(function () {
+            $('#fileupload').fileupload({
+                dataType: 'json',
+                done: function (e, data) {
+                    $("#Logo").val(data.result.imgPath);
+                    $(".logo").attr("src", data.result.url);
+                    $(".fileinput-button .btn span").text("重新上传图片");
+                    $(".img-detail-con").show();
+
+                    $.notify({
+                        message: "品牌LOGO图片上传成功！",
+                        icon: 'pe-7s-check',
+                    }, {
+                            type: "success",
+                            placement: {
+                                from: "top",
+                                align: "center"
+                            },
+                            delay: 3000
+                        });
+                }
+            });
+        });
+    </script>
+}

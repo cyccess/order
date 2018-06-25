@@ -1,4 +1,120 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Dashboard";
 }
-<h3>Home Page</h3>
+@model DashboardViewModel
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box bg-pink hover-expand-effect">
+                <div class="icon">
+                    <i class="pe-7s-arc"></i>
+                </div>
+                <div class="content">
+                    <div class="text">待发货订单</div>
+                    <div class="number count-to" data-from="0" data-to="125" data-speed="15" data-fresh-interval="20">@Model.AwaitOrderCount</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box bg-cyan hover-expand-effect">
+                <div class="icon">
+                    <i class="pe-7s-note2"></i>
+                </div>
+                <div class="content">
+                    <div class="text">已发货订单</div>
+                    <div class="number count-to" data-from="0" data-to="125" data-speed="15" data-fresh-interval="20">@Model.SentOrderCount</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box bg-light-green hover-expand-effect">
+                <div class="icon">
+                    <i class="pe-7s-date"></i>
+                </div>
+                <div class="content">
+                    <div class="text">当月订单数</div>
+                    <div class="number count-to" data-from="0" data-to="125" data-speed="15" data-fresh-interval="20">@Model.CurrentMonthOrderCount</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <div class="info-box bg-orange hover-expand-effect">
+                <div class="icon">
+                    <i class="pe-7s-graph1"></i>
+                </div>
+                <div class="content">
+                    <div class="text">累计总订单数</div>
+                    <div class="number count-to" data-from="0" data-to="125" data-speed="15" data-fresh-interval="20">@Model.TotalOrderCount</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-9">
+            <div class="card">
+                <div class="header">
+                    <h4 class="title">订单统计</h4>
+                </div>
+                <div class="content">
+                    <div id="chartHours" class="ct-chart"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card total-card bg-deep-purple">
+                <div class="header">
+                    <h4 class="title">商品总数</h4>
+                </div>
+                <div class="content">
+                    <div class="count-text">
+                        @Model.GoodsCount
+                    </div>
+                </div>
+            </div>
+
+            <div class="card total-card bg-light-blue">
+                <div class="header">
+                    <h4 class="title">门店总数</h4>
+                </div>
+                <div class="content">
+                    <div class="count-text">
+                        @Model.ShopCount
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(function () {
+
+            var data = {
+                labels: ['2018年1月', '2018年2月', '2018年3月', '2018年4月', '2018年5月', '2018年6月'],
+                series: [
+                    {
+                        data: [4, 2, 7, 5, 8, 13]
+                    }
+                ]
+            };
+
+            /* Set some base options (settings will override the default settings in Chartist.js *see default settings*). We are adding a basic label interpolation function for the xAxis labels. */
+            var options = {
+                axisX: {
+                    labelInterpolationFnc: function (value) {
+                        return value;
+                    }
+                }
+            };
+
+            new Chartist.Line('.ct-chart', data, options);
+
+        });
+       
+    </script>
+}
