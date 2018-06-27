@@ -103,7 +103,7 @@ namespace Cyc.Order.Web.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var model = new ResultModel();
-            var isExistsGoods = _context.Goods.Any(g => g.BrandId == id);
+            var isExistsGoods = _context.Goods.Any(g => g.BrandId == id && g.IsDelete == true);
 
             if (isExistsGoods)
             {
