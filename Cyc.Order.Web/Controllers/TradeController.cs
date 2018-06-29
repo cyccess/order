@@ -1,12 +1,16 @@
 ﻿using Cyc.Order.Data;
 using Cyc.Order.Web.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
 using Sakura.AspNetCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,10 +19,13 @@ namespace Cyc.Order.Web.Controllers
 
     public class TradeController : Controller
     {
+        private IHostingEnvironment _hostingEnvironment;
+
         private readonly OrderDbContext _context;
 
-        public TradeController(OrderDbContext context)
+        public TradeController(IHostingEnvironment hostingEnvironment, OrderDbContext context)
         {
+            _hostingEnvironment = hostingEnvironment;
             _context = context;
         }
 
@@ -243,6 +250,12 @@ namespace Cyc.Order.Web.Controllers
         [Authorize(Roles = "admin,system")]
         public async Task<IActionResult> SaleDetail(int shopId, string billDate, string goodsName)
         {
+            SaleDetailViewModel model = await GetGoodsSale(shopId, billDate, goodsName);
+            return View(model);
+        }
+
+        private async Task<SaleDetailViewModel> GetGoodsSale(int shopId, string billDate, string goodsName)
+        {
             var tempDate = DateTime.Parse(billDate);
             var fristDate = tempDate.AddDays(1 - DateTime.Now.Day).Date; //当月第一天
             var lastDate = tempDate.AddDays(1 - DateTime.Now.Day).Date.AddMonths(1).AddSeconds(-1); // 当月最后一天
@@ -272,8 +285,52 @@ namespace Cyc.Order.Web.Controllers
                 GoodsName = goodsName,
                 SaleDetailRows = await queryableGoods.ToListAsync()
             };
+            return model;
+        }
 
-            return View(model);
+
+        [Authorize(Roles = "admin,system")]
+        public async Task<IActionResult> ExportSales(int shopId, string billDate)
+        {
+            string sWebRootFolder = _hostingEnvironment.WebRootPath;
+            string sFileName = $"{Guid.NewGuid()}.xlsx";
+            FileInfo file = new FileInfo(Path.Combine(sWebRootFolder, sFileName));
+            using (ExcelPackage package = new ExcelPackage(file))
+            {
+
+                // 添加worksheet
+                ExcelWorksheet worksheet = package.Workbook.Worksheets.Add(billDate);
+
+                worksheet.Cells[1, 1, 1, 4].Merge = true;
+
+                worksheet.Cells[1, 1].Value = billDate + "销售统计单";
+
+                worksheet.Row(1).Height = 35;
+                worksheet.Row(1).Style.Font.Size = 16;
+                worksheet.Row(1).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                worksheet.Row(1).Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+                worksheet.Cells[2, 1].Value = "编号";
+                worksheet.Cells[2, 2].Value = "商品名称";
+                worksheet.Cells[2, 3].Value = "销售数量";
+                worksheet.Cells[2, 4].Value = "销售总额";
+
+                worksheet.Column(4).Style.Numberformat.Format = "0.00";
+
+                SaleDetailViewModel model = await GetGoodsSale(shopId, billDate, null);
+
+                for (int i = 0; i < model.SaleDetailRows.Count; i++)
+                {
+                    var index = i + 3;
+                    worksheet.Cells["A" + index].Value = model.SaleDetailRows[i].GoodsId;
+                    worksheet.Cells["B" + index].Value = model.SaleDetailRows[i].GoodsName;
+                    worksheet.Cells["C" + index].Value = model.SaleDetailRows[i].SaleCount;
+                    worksheet.Cells["D" + index].Value = model.SaleDetailRows[i].TotalAmount;
+                }
+
+                package.Save();
+            }
+            return File(sFileName, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", billDate + ".xlsx");
         }
     }
 }

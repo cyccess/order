@@ -46,7 +46,7 @@
                            <td>@item.TotalAmount</td>
                            <td>
                                <a asp-controller="Trade" asp-action="SaleDetail" asp-route-shopId="@item.ShopId" asp-route-billDate="@Model.BillDate">详情</a>
-                           | <a href="#">导出</a>
+                            | <a asp-controller="Trade" asp-action="ExportSales" asp-route-shopId="@item.ShopId" asp-route-billDate="@Model.BillDate">导出</a>
                            </td>
                        </tr>
                    }
