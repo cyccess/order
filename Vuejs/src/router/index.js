@@ -6,6 +6,7 @@ import Home from '@/components/Home'
 import Category from '@/components/Category'
 import My from '@/components/My'
 import Info from '@/components/Info'
+import Address from '@/components/Address'
 import List from '@/components/List'
 import Detail from '@/components/Detail'
 import ShoppingCart from '@/components/ShoppingCart'
@@ -48,6 +49,12 @@ export default [
     name: 'info',
     component: Info,
     meta: {title: '基本信息', requiresAuth: true}
+  },
+  {
+    path: '/address',
+    name: 'address',
+    component: Address,
+    meta: {title: '配送地址', requiresAuth: true}
   },
   {
     path: '/myOrder',

@@ -26,12 +26,12 @@
           <div class="m-text">基本信息</div>
         </router-link>
 
-        <router-link to="" class="m-menu-item">
+      <!--  <router-link to="" class="m-menu-item">
           <div class="m-icon">
             <i class="icon icon-dizhi"></i>
           </div>
           <div class="m-text">收货地址</div>
-        </router-link>
+        </router-link>-->
       </div>
 
       <div class="m-menu m-logout">

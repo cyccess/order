@@ -66,7 +66,7 @@
     },
     created() {
       this.oid = this.$route.query.oid;
-      this.getData()
+      this.getData();
     },
     methods: {
       async getData() {
@@ -74,6 +74,10 @@
         this.goodList = res.orderRecordDetails;
         this.shop = res.shop;
         this.orderInfo = res.orderRecord;
+
+        if(!this.shop.address){
+          this.$router.push({path:"/address"});
+        }
       },
       async submitOrder(){
         let res = await this.$http.post('/api/Order/SubmitOrder',{oid: this.oid});

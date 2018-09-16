@@ -6,12 +6,19 @@
   <div class="m-orderInfo">
     <p>订单提交成功，请等待配送！</p>
     <p>订单号：{{oid}}</p>
-    <p>如需帮助，请拨打电话：<span class="phone">18580760059</span></p>
+    <p>如需帮助，请拨打电话：<span class="phone">13212319938</span></p>
   </div>
 
-  <router-link class="m-orderDetail" :to="{name:'orderDetail',query:{oid:oid}}">
-    订单详情
-  </router-link>
+  <div>
+    <router-link class="m-orderDetail my" :to="{name:'myOrder'}">
+      我的订单
+    </router-link>
+    <router-link class="m-orderDetail" :to="{name:'orderDetail',query:{oid:oid}}">
+      订单详情
+    </router-link>
+  </div>
+
+
 
   <div style="height: 50px;"></div>
 </div>
@@ -57,5 +64,9 @@
     background-color: #e4393c;
     color:#fff;
     border-radius: 4px;
+  }
+
+  .m-orderDetail.my{
+    background-color: #0bb20c;
   }
 </style>

@@ -9,7 +9,7 @@
       </router-link>
     </div>
 
-    <toolbar :selected="1"></toolbar>
+    <toolbar :selected="0"></toolbar>
   </div>
 </template>
 

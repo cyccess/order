@@ -48,7 +48,7 @@
       </div>
     </scroller>
   </div>
-  <toolbar :selected="3"></toolbar>
+  <toolbar :selected="1"></toolbar>
 </div>
 </template>
 
