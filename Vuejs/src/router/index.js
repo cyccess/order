@@ -26,14 +26,14 @@ export default [
     component: Register,
     meta: {title: '手机号注册'}
   },
-  {
+/*  {
     path: '/',
     name: 'home',
     component: Home,
     meta: {title: '首页', keepAlive: true}
-  },
+  },*/
   {
-    path: '/category',
+    path: '/',
     name: 'category',
     component: Category,
     meta: {title: '分类', keepAlive: true}
